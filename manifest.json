@@ -1,0 +1,30 @@
+{
+    "manifest_version": 3,
+    "name": "Noter",
+    "description": "Save notes for web pages",
+    "version": "1.0",
+    "permissions": ["activeTab", "declarativeContent", "storage", "scripting"],
+    "action": {
+      "default_popup": "./html/default_popup.html",
+      "default_icon":  "img/icons/icon-128.png"                     
+      },
+      "icons": {
+        "16": "img/icons/icon-16.png",
+        "32": "img/icons/icon-32.png",
+        "48": "img/icons/icon-48.png",
+        "128": "img/icons/icon-128.png"
+    },
+    "content_scripts": [
+        {
+          "matches": ["<all_urls>"],
+          "css": ["css/main.css"],
+          "js": ["js/main.js"]
+        }
+    ],
+    
+    "web_accessible_resources": [{
+        "resources": ["img/copy.png", "img/add.png"],
+        "matches": ["<all_urls>"]
+            
+    }]      
+  }

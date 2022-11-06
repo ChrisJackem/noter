@@ -1,0 +1,51 @@
+*{
+    padding: 0;
+    margin: 0;
+    --tool-tip-background: black;
+}
+.tool-tip{
+    z-index: 1000;
+    position: absolute;
+    background-color: var(--tool-tip-background);
+    text-align: center;
+    padding: 0.5rem 1rem;
+    transform: translate(-50%, -100% ) ;
+    color: white;
+    border-radius: 2px;    
+    background-size: cover;
+    border: 1px solid #808080;
+    display: flex;
+    flex-wrap: wrap;
+    filter: drop-shadow(0px 1px 0.5px white);
+}
+.tool-tip:after{
+    content: '';
+    border: 5px solid transparent;
+    border-bottom: 0;
+    border-top: 10px solid black;
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: calc( 100% - 1px );
+    left: 50%;
+    display: block;
+    transform: translateX(-50%)
+}
+
+.tool-tip > small{
+    width: 100%;
+}
+
+button{
+    padding: 0.25rem;
+    float: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 6px;
+    width: 50px;
+    
+}
+button > img{
+    height: 100%;
+} 
