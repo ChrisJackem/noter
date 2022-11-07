@@ -2,22 +2,27 @@
     padding: 0;
     margin: 0;
     --tool-tip-background: black;
+    --tool-tip-border-color: #a1a1a1;
+    --button-background: #5b5b5b;
 }
 .hidden{
     display: none;
 }
+.rounded{
+    border-radius: 3px;
+}
+
+
+
 #tool-tip{
     z-index: 1000;
     position: absolute;
     background-color: var(--tool-tip-background);
-    /* text-align: center; */
     padding: 0.5rem 1rem;
     transform: translate(-50%, -100% ) ;
     color: white;
-    border-radius: 2px;    
-    /* background-size: cover; */
-    border: 1px solid #808080;
-    filter: drop-shadow(0px 1px 0.5px white);
+    border-radius: 2px;      
+    filter: drop-shadow(0px 1px 2px var(--tool-tip-border-color) );
 }
 #tool-tip:after{
     content: '';
@@ -29,13 +34,21 @@
     height: 0;
     top: calc( 100% - 1px );
     left: 50%;
-    display: block;
     transform: translateX(-50%)
 }
 .noter-btn{
-    padding: 0.25rem;
-    width: 50px;  
-    border: 1px solid white !important;  
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    background-color: var(--button-background);
+    padding: 0.25rem 0.5rem;
+    margin: 0.25rem;    
+    border: 2px solid var(--tool-tip-border-color) !important;
+    transition: all 0.25s;
+}
+.noter-btn:hover{
+    color: black;
+    background-color: #bdbdbd;
 }
 
 .noter-title{
