@@ -3,22 +3,23 @@
     margin: 0;
     --tool-tip-background: black;
 }
-.tool-tip{
+.hidden{
+    display: none;
+}
+#tool-tip{
     z-index: 1000;
     position: absolute;
     background-color: var(--tool-tip-background);
-    text-align: center;
+    /* text-align: center; */
     padding: 0.5rem 1rem;
     transform: translate(-50%, -100% ) ;
     color: white;
     border-radius: 2px;    
-    background-size: cover;
+    /* background-size: cover; */
     border: 1px solid #808080;
-    display: flex;
-    flex-wrap: wrap;
     filter: drop-shadow(0px 1px 0.5px white);
 }
-.tool-tip:after{
+#tool-tip:after{
     content: '';
     border: 5px solid transparent;
     border-bottom: 0;
@@ -31,21 +32,40 @@
     display: block;
     transform: translateX(-50%)
 }
-
-.tool-tip > small{
-    width: 100%;
-}
-
-button{
+.noter-btn{
     padding: 0.25rem;
-    float: left;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 6px;
-    width: 50px;
-    
+    width: 50px;  
+    border: 1px solid white !important;  
 }
-button > img{
-    height: 100%;
-} 
+
+.noter-title{
+    display: flex;
+}
+
+#note-panel{
+    white-space: pre;
+    direction: rtl;
+    resize: both;
+    overflow: auto;
+    color: white;
+    z-index: 100000;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: black;
+    width: 100px;
+    height: 200px;
+    border: 2px solid white;
+}
+#note-panel > .top{
+    display: flex;
+}
+
+#notes-inner{
+    direction: ltr;
+}
+.note{
+    margin: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #cccccc;
+}
