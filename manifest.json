@@ -21,9 +21,7 @@
           "js": ["js/content.js"]
         }
     ],
-    "background": {
-      "service_worker": "background.js"
-    },
+    
     "web_accessible_resources": [{
         "resources": ["img/copy.png", "img/add.png"],
         "matches": ["<all_urls>"]

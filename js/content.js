@@ -1,7 +1,7 @@
 var selected = null
 const arrow_size = 20
 
-chrome.runtime.connect()
+//chrome.runtime.connect()
 
 // Factories
 const createNode = ({ type, id, classes, html } = obj ) => {  
@@ -31,21 +31,24 @@ tool_tip.appendChild( createBtn( 'Copy', null, e =>{
 
 //chrome.storage.sync.set({notes: []})
 tool_tip.appendChild( createBtn( 'Add', null, e =>{
-    if (selected) { 
-       /*  chrome.runtime.sendMessage({ add: 'Ok'}, response => {
-            console.log(response);
-        }); */
-        /* chrome.storage.sync.get('notes', note_data => {            
+    if (selected) {
+
+        // Append new object to note_data
+        chrome.storage.sync.get('notes', note_data => {            
             const url = window.location.href
             const date = new Date().toLocaleString()
             const new_note = {
-                date: date,
+                name: date,
+                collapsed: false,
                 url: url,
                 text: selected
             }
             note_data.notes.push(new_note)
+            console.log('notes', note_data.notes)
             chrome.storage.sync.set({notes: note_data.notes})
-        }) */
+        })
+
+        tool_tip.classList.add('hidden')
     }
 }))
 
