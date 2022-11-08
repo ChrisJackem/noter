@@ -15,7 +15,7 @@
     overflow: auto;
     background-color: black;
     font-family: var(--noter-font);
-    width: 600px;
+    width: 100%;
 }
 
 .hidden{
@@ -70,17 +70,20 @@
     background: linear-gradient(var(--neutral-grey), var(--dark-grey));
 }
 #noter-body input{
-    border: 2px solid black;
+    border-radius: 3px;
+    border: 2px solid var(--dark-grey);
+    background-color: black;
+    color: white;
     padding: 0.25rem 0.5rem;
     flex-grow: 1;
+    outline: none;
+    margin-right: 0.3rem;
 }
-/* #noter-body .note-head > h5{ 
-    margin-right: auto;
-    font-size: 12px;;
-}  */
-#noter-body .note-head > button{
+.note-head > button{
     padding: 0.15rem 0.25rem;
     margin: 0.2rem;
+    min-width: 25px;
+    text-align: center;
 }
 
 /************* Note body ******/

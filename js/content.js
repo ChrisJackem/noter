@@ -20,6 +20,13 @@ const createBtn = (name, classes, on_click) =>{
     return btn
 }
 
+const escapeHTML = str =>{
+    let text = document.createTextNode(str)
+    let p = document.createElement('p')
+    p.appendChild(text)
+    return p.innerHTML
+}
+
 // ToolTip 
 const tool_tip = document.body.appendChild( createNode(
      { type:'div', id:'tool-tip', classes:['hidden']//, html:'Noter'
@@ -41,7 +48,8 @@ tool_tip.appendChild( createBtn( 'Add', null, e =>{
                 name: date,
                 collapsed: false,
                 url: url,
-                text: selected
+                text: escapeHTML(selected)
+                
             }
             note_data.notes.push(new_note)
             console.log('notes', note_data.notes)

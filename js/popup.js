@@ -1,10 +1,19 @@
 console.log('Popup js')
 const settings = document.getElementById('settings')
 const content = document.getElementById('content')
+const actions = document.getElementById('actions')
+
+const btn_full = document.getElementById('full-btn')
 
 let note_array = null
 
 //chrome.runtime.connect()
+
+btn_full.onclick = 
+    e => chrome.tabs.create({url:'html/default_popup.html'});
+
+
+
 
 const addNote = ( index, name, url, text, collapsed )=>{
     console.log(collapsed)
@@ -12,30 +21,30 @@ const addNote = ( index, name, url, text, collapsed )=>{
     const new_note = content.appendChild( new DOMParser().parseFromString(
         `<div class='note' data-index=${index}>
             <div class='note-head'>
-                <h5 class='flex-left'>${name}</h5>
-                <input type='text' class='hidden flex-left rounded' value='${name}'>
+                <h4 class='flex-left'>${name}</h4>
+                <input type='text' class='hidden' value='${name}'>
                 <button class='btn-rename'>Rename</button>
                 <button class='btn-collapse'>${collapsed ? '+' : '-'}</button>
                 <button class='btn-dismiss'>delete</button>
             </div>
             <div class='note-collapse ${collapsed ? 'collapsed' : ''}'>
                 <div class='note-inner'>
-                    <div class='note-text rounded'>${text}</div>
+                    <pre class='note-text rounded'>${text}</pre>
                 </div>
                 <div class='note-footer'>
-                    <small><a href='${url}'>${url}</a></small>
+                    <small><a class='note-link' href='${url}'>${url}</a></small>
                 </div>
             </div>
         </div>`
     , 'text/html').body.firstChild )
     
     // Actions
-    const note_title_h = new_note.getElementsByTagName('h5')[0]
+    const note_title_h = new_note.getElementsByTagName('h4')[0]
     const note_title_input = new_note.getElementsByTagName('input')[0]
     const btn_collapse = new_note.getElementsByClassName('btn-collapse')[0]
     const btn_dismiss = new_note.getElementsByClassName('btn-dismiss')[0]
     const btn_rename = new_note.getElementsByClassName('btn-rename')[0]
-    const note_anchor = new_note.getElementsByTagName('a')[0]
+    const note_anchor = new_note.getElementsByClassName('note-link')[0]
 
     // Activate link
     note_anchor.onclick = 
