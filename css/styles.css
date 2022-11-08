@@ -1,0 +1,151 @@
+*{
+    margin: 0;
+    padding: 0;
+    --dark-grey: #333333;
+    --neutral-grey: #3c3c3c;
+    --lighter-grey: #6f6f6f;
+    --light-grey: #b4b4b4;
+
+    --noter-font: Arial, Helvetica, sans-serif;
+    --code-font: 'Courier New', monospace;
+}
+
+#noter-body{
+    color: white;
+    overflow: auto;
+    background-color: black;
+    font-family: var(--noter-font);
+    width: 600px;
+}
+
+.hidden{
+    display: none;
+}
+.rounded{
+    border-radius: 3px;
+}
+
+/******************************************** scrollbar */
+#noter-body::-webkit-scrollbar { width: 7px; }
+#noter-body::-webkit-scrollbar-track {
+    background: linear-gradient(black, var(--neutral-grey), black);
+    padding: 1px;
+}
+#noter-body::-webkit-scrollbar-thumb { 
+    background: var(--lighter-grey);
+    border: 1px solid black;
+}
+#noter-body::-webkit-scrollbar-thumb:hover { background: var(--light-grey); }
+
+/********************************************* Popup */
+#noter-body #title-bar{
+    background: linear-gradient( var(--dark-grey), var(--neutral-grey), var(--dark-grey));
+    padding: 0.25rem 0.5rem;
+    border: 2px solid black;
+}
+#noter-body #content{
+    padding: 0.5rem;
+    padding-bottom: 0;
+}
+
+/******* Notes **************/
+#noter-body .note{
+    background-color: var(--neutral-grey);
+    border-radius: 2px;
+    margin-bottom: 0.75rem;
+}
+
+#noter-body .note div {
+    padding: 0.25rem 0.5rem;
+}
+
+#noter-body .note-head{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: end;    
+    background: linear-gradient(var(--neutral-grey), var(--dark-grey));
+}
+#noter-body .note-head > h5{ 
+    margin-right: auto;
+    font-size: 12px;;
+} 
+#noter-body .note-head > button{
+    padding: 0.15rem 0.25rem;
+    margin: 0.2rem;
+}
+
+/************* Note body ******/
+
+/*Collapse*/
+#noter-body .note-collapse{
+    padding: 0 !important;
+    overflow-y: hidden;
+}
+#noter-body .note-collapse.collapsed{
+    max-height: 0px;
+}
+
+
+
+#noter-body .note-inner{
+    background-color: #808080;    
+}
+#noter-body .note-inner .note-text{
+    white-space: pre-wrap;
+    font-family: var(--code-font);
+    margin: 0.2rem 0;
+    padding: 0.5rem;
+    background-color: white;
+    color: black;
+}
+
+#noter-body .note-footer{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#noter-body .note-footer a{
+    text-decoration: none;
+    color: var(--light-grey);
+}
+
+
+/***************************************** Injected Element */
+
+
+#tool-tip{
+    z-index: 1000;
+    position: absolute;
+    background-color: black;
+    padding: 0.5rem 1rem;
+    transform: translate(-50%, -100% ) ;
+    color: white;
+    border-radius: 2px;      
+    filter: drop-shadow(0px 1px 2px var(--neutral-grey) );
+}
+#tool-tip:after{
+    content: '';
+    border: 5px solid transparent;
+    border-bottom: 0;
+    border-top: 10px solid black;
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: calc( 100% - 1px );
+    left: 50%;
+    transform: translateX(-50%)
+}
+.noter-btn{
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    background-color: var(--lighter-grey);
+    padding: 0.25rem 0.5rem;
+    margin: 0.25rem;
+    transition: all 0.25s;
+}
+.noter-btn:hover{
+    color: black;
+    background-color: var(--light-grey);
+}

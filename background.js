@@ -1,15 +1,29 @@
 console.log("bg")
 
-let state = 'normal'
+let notes_array = null
+chrome.storage.sync.get('notes', note_data => {
+    notes_array = note_data.notes
+})
+
+chrome.runtime.onConnect.addListener( port =>{
+    console.log('connect')
+
+    port.onDisconnect.addListener(()=>{
+        console.log('disconnect')
+    })
+})
 
 
-/* chrome.runtime.onMessage.addListener( (request, sender) => {
-    const url = sender.url
-    const text = request.text
-    console.log('Mesage', url, text)
-    /* chrome.storage.sync.set({url: text}, function() {
-        console.log(`Storage - ${url}: ${text}`);
-    });  
-    
-    
-}) */
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      console.log('msg-', request)
+      if (request.ask === "note_data"){
+        sendResponse({note_data: notes_array})
+      }
+      
+      if (request.add){
+        console.log(request)
+        sendResponse({ok: true})
+      }
+    }
+);
