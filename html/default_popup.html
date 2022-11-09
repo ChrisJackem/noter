@@ -9,13 +9,19 @@
 </head>
 <body id="noter-body">
 
-    <div id="title-bar">
+    <!-- <div id="title-bar">
         <h4>Noter</h4>
-    </div>
+    </div> -->
 
     <div id="tools" class="rounded">
-        <button id="tool-settings" class="tool-btn unselected" data-div="settings">Settings</button>
-        <button id="tool-tools" class="tool-btn unselected" data-div="actions">Tools</button>   
+
+        <div id="title-bar">
+            <img src="../img/icons/icon-128.png">
+            <h2>Noter</h2>
+            <button id="tool-settings" class="tool-btn unselected" data-div="settings">Settings</button>
+            <button id="tool-tools" class="tool-btn unselected" data-div="actions">Tools</button>   
+        </div>
+
         <div id="settings" class="top-menu hidden">
             <div id='tooltip-check' class="checkboxed">
                 <input type="checkbox" id="tooltip-box" name="tooltip-toggle" checked>
@@ -23,12 +29,14 @@
             </div>
             
         </div>
+
         <div id="actions" class="top-menu hidden">                  
             <button id="full-btn">Tabify</button>
             <button id="delete-all">Delete All</button>
             <button id="collapse-all">Collapse All</button>
             <button id="uncollapse-all">Expand All</button>            
         </div>
+
     </div>
 
     <div id="content"></div>

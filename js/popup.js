@@ -5,6 +5,7 @@ const tool_menu = document.getElementById('tools')
 const tool_btns = [...tool_menu.getElementsByClassName('tool-btn')]
 const show_tooltip_checkbox = document.getElementById('tooltip-box')
 const getAllNotes = ()=> [...content.getElementsByClassName('note')]
+const dom_parser = new DOMParser()
 
 let note_array = null
 
@@ -57,12 +58,7 @@ document.getElementById('delete-all').onclick = e => {
     note_array = []
     chrome.storage.sync.set({notes: note_array})
     getAllNotes().forEach( n => n.remove() )
-
-    /* for ( const note of getAllNotes() ){
-        note.getElementsByClassName('btn-dismiss')[0].onclick()
-    } */
 }
-
 
 show_tooltip_checkbox.onclick = e =>{
     chrome.storage.sync.set({show_tooltip: e.currentTarget.checked})
@@ -72,15 +68,15 @@ chrome.storage.sync.get('show_tooltip', response => {
     show_tooltip_checkbox.checked = response.show_tooltip
 })
 
-
 //////////////////////////////////////////////////////////////// Notes
+
 const addNote = ( index, name, url, text, collapsed )=>{
-    // Create nodes from all this
-    const new_note = content.appendChild( new DOMParser().parseFromString(
+    
+    const new_note = content.appendChild( dom_parser.parseFromString(
         `<div class='note' data-index=${index}>
             <div class='note-head'>
                 <h4 class='flex-left'>${name}</h4>
-                <input type='text' class='hidden' value='${name}'>
+                <input type='text' class='hidden' value='${name}' maxlength="50">
                 <button class='btn-rename'>Rename</button>
                 <button class='btn-copy'>Copy</button>
                 <button class='btn-collapse'>${collapsed ? '+' : '-'}</button>
@@ -138,17 +134,20 @@ const addNote = ( index, name, url, text, collapsed )=>{
         chrome.storage.sync.set({notes: note_array})
         new_note.remove()
     }
-
-    btn_copy.onclick = e => navigator.clipboard.writeText( text )
+    btn_copy.onclick = e =>{ 
+        let unescape = document.createElement('textarea')
+        unescape.innerHTML = text
+        navigator.clipboard.writeText( unescape.value )
+    }
 }
 
 const setNoteData = (index, prop, new_val) =>{
     const obj = note_array[index]
-    console.log(obj)
     obj[prop] = new_val
     chrome.storage.sync.set({notes: note_array})
 }
 
+// Init notes
 const getNoteData = (() => {
     chrome.storage.sync.get('notes', note_data => {
         note_array = note_data.notes

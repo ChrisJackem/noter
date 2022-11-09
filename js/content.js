@@ -56,7 +56,6 @@ chrome.storage.sync.get('show_tooltip', response => {
                 }
                 if (!note_data.hasOwnProperty('notes')) note_data.notes = []
                 note_data.notes.push(new_note)
-                console.log('notes', note_data.notes)
                 chrome.storage.sync.set({notes: note_data.notes})
             })
 
