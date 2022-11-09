@@ -12,14 +12,14 @@
 
 #noter-body{
     color: white;
-    overflow: auto;
+    overflow-y: auto;
     background-color: black;
     font-family: var(--noter-font);
-    width: 100%;
+    width: 600px;
 }
 
 .hidden{
-    display: none;
+    display: none !important;
 }
 .rounded{
     border-radius: 3px;
@@ -31,7 +31,7 @@
 /******************************************** scrollbar */
 #noter-body::-webkit-scrollbar { width: 7px; }
 #noter-body::-webkit-scrollbar-track {
-    background: linear-gradient(black, var(--neutral-grey), black);
+    background: black;/* linear-gradient(black, var(--neutral-grey), black); */
     padding: 1px;
 }
 #noter-body::-webkit-scrollbar-thumb { 
@@ -46,10 +46,82 @@
     padding: 0.25rem 0.5rem;
     border: 2px solid black;
 }
+
+#noter-body #tools{
+    padding: 0.25rem 0.5rem 0 0.5rem;
+    border: 2px solid var(--neutral-grey);
+    margin: 0.25rem 0.5rem;
+}
+
+#noter-body #tools > button{
+    border: 2px solid var(--neutral-grey);
+    border-bottom: 0;
+    margin-bottom: 0;
+    border-radius: 3px 3px 0 0;
+    background-color: var(--neutral-grey);
+}
+#noter-body #tools > button:first-child{
+    margin-left: 0.5rem;
+}
+#noter-body #tools .unselected{
+    background-color: var(--dark-grey);
+    border-bottom: 0;
+    background-color: black;
+    /* color: var(--dark-grey); */
+    /* background-color: black;     */
+}
+
+#noter-body .top-menu{
+    background-color: var(--neutral-grey);
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(var(--neutral-grey), var(--dark-grey));
+}
+
+#noter-body input[type='checkbox']{
+    width: 20px;
+    height: 20px;
+    flex-grow: 0;
+}
+#noter-body .checkboxed{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+
 #noter-body #content{
     padding: 0.5rem;
     padding-bottom: 0;
 }
+
+/* 
+#noter-body .top-menu{
+    border: 2px solid var(--neutral-grey);
+    margin: 0.25rem;
+    margin-bottom: 0;
+    border-radius: 3px;
+    padding: 0.3rem;
+}
+#noter-body .top-menu > div{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+#noter-body .top-menu > div:first-child{
+    justify-content: space-between;
+}
+#noter-body .top-menu > div:first-child:first-child{
+    margin-left: 0.5rem;
+} */
+
+/* #noter-body .top-menu > h4{
+    text-align: center;
+    margin-top: 0.25rem;
+} */
+
+
 
 /******* Notes **************/
 #noter-body .note{
@@ -65,7 +137,6 @@
 #noter-body .note-head{
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
     justify-content: end;    
     background: linear-gradient(var(--neutral-grey), var(--dark-grey));
 }
@@ -79,11 +150,30 @@
     outline: none;
     margin-right: 0.3rem;
 }
-.note-head > button{
-    padding: 0.15rem 0.25rem;
+
+/* Buttons */
+#noter-body button{
+    padding: 0.25rem 0.5rem;
     margin: 0.2rem;
-    min-width: 25px;
+    min-width: 30px;
     text-align: center;
+    background: var(--dark-grey);
+    color: white;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+#noter-body button:hover{
+    background-color: var(--neutral-grey);
+}
+#noter-body .btn-dismiss{
+    font-size: 16px;
+    font-weight: bolder;
+    background-color: #9D3E33;
+    color: black;
+}
+#noter-body .btn-dismiss:hover{
+    background-color: #b84336;
 }
 
 /************* Note body ******/
@@ -109,6 +199,7 @@
     padding: 0.5rem;
     background-color: white;
     color: black;
+    
 }
 
 #noter-body .note-footer{
