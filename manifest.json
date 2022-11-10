@@ -23,7 +23,7 @@
     ],
     
     "web_accessible_resources": [{
-        "resources": ["img/copy.png", "img/add.png"],
+        "resources": ["img/*"],
         "matches": ["<all_urls>"]
             
     }]      

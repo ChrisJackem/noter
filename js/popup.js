@@ -7,6 +7,14 @@ const show_tooltip_checkbox = document.getElementById('tooltip-box')
 const getAllNotes = ()=> [...content.getElementsByClassName('note')]
 const dom_parser = new DOMParser()
 
+const img_save = '../img/buttons/save.svg'
+const img_rename = '../img/buttons/rename.svg'
+const img_copy = '../img/buttons/copy.svg'
+const img_plus = '../img/buttons/plus.svg'
+const img_minus = '../img/buttons/minus.svg'
+const img_x = '../img/buttons/x.svg'
+
+
 let note_array = null
 
 ////////////////////////////////////////////////////////////////// Tools 
@@ -40,12 +48,12 @@ const collapse_all = collapse =>{
         const is_collapsed = collapse_div.classList.contains('collapsed')        
         if ( collapse ){
             if ( !is_collapsed ){
-                collapse_btn.innerHTML = '+'
+                collapse_btn.innerHTML = `<img src='${img_plus}'>`
                 collapse_div.classList.add('collapsed') 
             }
         }else{
             if ( is_collapsed ){
-                collapse_btn.innerHTML = '-'
+                collapse_btn.innerHTML = `<img src='${img_minus}'>`
                 collapse_div.classList.remove('collapsed') 
             }
         }
@@ -75,12 +83,20 @@ const addNote = ( index, name, url, text, collapsed )=>{
     const new_note = content.appendChild( dom_parser.parseFromString(
         `<div class='note' data-index=${index}>
             <div class='note-head'>
-                <h4 class='flex-left'>${name}</h4>
-                <input type='text' class='hidden' value='${name}' maxlength="50">
-                <button class='btn-rename'>Rename</button>
-                <button class='btn-copy'>Copy</button>
-                <button class='btn-collapse'>${collapsed ? '+' : '-'}</button>
-                <button class='btn-dismiss'>x</button>
+                <h3 class='flex-left'>${name}</h3>
+                <input type='text' class='hidden' value='${name}' maxlength="50">                
+                <button class='btn-rename'>
+                    <img src='${img_rename}'>
+                </button>                
+                <button class='btn-copy'>
+                    <img src='${img_copy}'>
+                </button>                
+                <button class='btn-collapse'>
+                    <img src='${collapsed ? img_plus : img_minus}'>
+                </button>                
+                <button class='btn-dismiss'>
+                    <img src='${img_x}'>
+                </button>
             </div>
             <div class='note-collapse ${collapsed ? 'collapsed' : ''}'>
                 <div class='note-inner'>
@@ -94,7 +110,7 @@ const addNote = ( index, name, url, text, collapsed )=>{
     , 'text/html').body.firstChild )
     
     // Actions
-    const note_title_h = new_note.getElementsByTagName('h4')[0]
+    const note_title_h = new_note.getElementsByTagName('h3')[0]
     const note_title_input = new_note.getElementsByTagName('input')[0]
     const btn_collapse = new_note.getElementsByClassName('btn-collapse')[0]
     const btn_dismiss = new_note.getElementsByClassName('btn-dismiss')[0]
@@ -112,10 +128,10 @@ const addNote = ( index, name, url, text, collapsed )=>{
         
         if (!header_showing){
             note_title_input.select()
-            btn_rename.innerHTML = 'Save'
+            btn_rename.innerHTML = `<img src='${img_save}'>`
         }else{
             // Save new name, clean up
-            btn_rename.innerHTML = 'Rename'
+            btn_rename.innerHTML = `<img src='${img_rename}'>`
             note_title_h.innerHTML = note_title_input.value
             setNoteData( index, 'name', note_title_input.value )
         }
@@ -124,7 +140,7 @@ const addNote = ( index, name, url, text, collapsed )=>{
     btn_collapse.onclick = e =>{
         const collapse_div = new_note.getElementsByClassName('note-collapse')[0]        
         const is_collapsed = [...collapse_div.classList].includes('collapsed')
-        btn_collapse.innerHTML = is_collapsed ? '-' : "+"    
+        btn_collapse.innerHTML = `<img src='${ is_collapsed ? img_minus : img_plus}'>`    
         collapse_div.classList.toggle('collapsed')
         setNoteData(index, 'collapsed', !is_collapsed)
     }
@@ -134,10 +150,10 @@ const addNote = ( index, name, url, text, collapsed )=>{
         chrome.storage.sync.set({notes: note_array})
         new_note.remove()
     }
-    btn_copy.onclick = e =>{ 
-        let unescape = document.createElement('textarea')
-        unescape.innerHTML = text
-        navigator.clipboard.writeText( unescape.value )
+    
+    btn_copy.onclick = e =>{
+        let dirty_dom = dom_parser.parseFromString( text,'text/html' )
+        navigator.clipboard.writeText( dirty_dom.body.textContent )
     }
 }
 

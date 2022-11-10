@@ -22,7 +22,7 @@ chrome.storage.sync.get('show_tooltip', response => {
         btn.addEventListener( 'click', on_click )
         return btn
     }
-
+    
     const escapeHTML = str =>{
         let text = document.createTextNode(str)
         let p = document.createElement('p')
@@ -44,15 +44,14 @@ chrome.storage.sync.get('show_tooltip', response => {
         if (selected) {
 
             // Append new object to note_data
-            chrome.storage.sync.get('notes', note_data => {            
+            chrome.storage.sync.get('notes', note_data => {
                 const url = window.location.href
                 const date = new Date().toLocaleString()
                 const new_note = {
                     name: date,
                     collapsed: false,
                     url: url,
-                    text: escapeHTML(selected)
-                    
+                    text: escapeHTML(selected)                    
                 }
                 if (!note_data.hasOwnProperty('notes')) note_data.notes = []
                 note_data.notes.push(new_note)
