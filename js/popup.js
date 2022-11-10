@@ -158,19 +158,31 @@ const addNote = ( index, name, url, text, collapsed )=>{
 }
 
 const setNoteData = (index, prop, new_val) =>{
-    const obj = note_array[index]
+    const obj = note_array[parseInt(index)]
     obj[prop] = new_val
     chrome.storage.sync.set({notes: note_array})
 }
 
 // Init notes
-const getNoteData = (() => {
+const getNoteData = (() => {   
+    chrome.runtime.sendMessage({ type: "get", value:"notes" }, response =>{        
+        /* if (!response) return */
+        console.log('response',response)
+        note_array = response
+        note_array.forEach( (note, i)=>{
+            const { name, text, url, collapsed } = note
+            addNote( i, name, url, text, collapsed )
+        })
+    });
+    
+    /* // OLD
     chrome.storage.sync.get('notes', note_data => {
+        console.log(note_data)
         note_array = note_data.notes
         if (!note_array) return
         note_array.forEach( (note, i)=>{
             const { name, text, url, collapsed } = note
             addNote( i, name, url, text, collapsed )
         })
-    });
+    }); */
 })()
