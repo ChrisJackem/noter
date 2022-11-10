@@ -13,6 +13,23 @@ chrome.runtime.onConnect.addListener( port =>{
     })
 })
 
+chrome.contextMenus.create({
+  id: 'foo',
+  title: 'first',
+  contexts: ['action']
+})
+
+function contextClick(info, tab) {
+  const { menuItemId } = info
+
+  if (menuItemId === 'foo') {
+    // do something
+  }
+}
+
+
+
+
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
