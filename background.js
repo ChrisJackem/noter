@@ -20,17 +20,15 @@ const setNewNotesBadge = ()=>{
   new_notes = notes_array.reduce( ( count, note )=> count += note.viewed ? 0 : 1, 0 )
   const badge_color = new_notes ? [0,255,0,255] : [100,100,100,255]
   const note_count = notes_array.length
-  console.log(notes_array)
   chrome.action.setBadgeBackgroundColor( {color: badge_color });
   chrome.action.setBadgeText({ text: new_notes ? 
-    `${new_notes}/${note_count}` : String( note_count ) });  
+    `${new_notes}/${note_count}` : note_count ? String(note_count) : '' });  
 }
 
 
-const addNote = obj =>{
-  const { name, url, text } = obj
+const addNote = ( url, text ) =>{
   notes_array.push({
-    name: name,
+    name: new Date().toLocaleString(),
     url: url,
     text: escapeHTML(text),
     collapsed: false,
@@ -50,25 +48,22 @@ chrome.storage.sync.get('notes', note_data => {
 
 
 // Context Menu Item
-chrome.contextMenus.create({
-  id: 'add',
-  title: 'Add new Note',
-  contexts: ['selection']
-})
 
-
-
-
-
-function contextClick(info, tab) {
-  const { pageUrl, selectionText } = info
-  addNote({
-    name: new Date().getDate(),
-    url: pageUrl,
-    text: selectionText
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: 'add',
+    title: 'Add new Note',
+    contexts: ['selection', 'page']
   })
-}
-chrome.contextMenus.onClicked.addListener(contextClick)
+
+  function contextClick( info, tab ) {
+    console.log(info, tab )
+    addNote( info.pageUrl, info.selectionText)   
+  }
+  chrome.contextMenus.onClicked.addListener(contextClick)
+});
+
+
 
 
 /* chrome.runtime.onConnect.addListener( port =>{
@@ -89,16 +84,25 @@ chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
 
       // popup requesting all notes
-      if (request.type === "get"){        
+      if (request.type === "get" && request.value === 'notes'){      
         notes_array.forEach( n => n.viewed = true )
         setNewNotesBadge()
         chrome.storage.sync.set({notes: notes_array})
         sendResponse( notes_array )
       }
+
+      // popup setting new note values
+      if ( request.type === 'set' && request.value === 'notes' ){        
+        console.log('NEW DATA:',request.data)
+        notes_array = request.data
+        chrome.storage.sync.set({notes: notes_array})
+        setNewNotesBadge()
+      }
       
       // Add a new note
       if ( request.type === 'add' ){
-        addNote( request.value )
+        const { url, text } = request.value
+        addNote( url, text )
         setNewNotesBadge()
       }
     }

@@ -1,8 +1,3 @@
-
-
-
-
-
 // Do not run if show_tooltip is false
 chrome.storage.sync.get('show_tooltip', response => {
     if ( response.hasOwnProperty('show_tooltip') && !response.show_tooltip ) return
@@ -27,13 +22,6 @@ chrome.storage.sync.get('show_tooltip', response => {
         return btn
     }
     
-    /* const escapeHTML = str =>{
-        let text = document.createTextNode(str)
-        let p = document.createElement('p')
-        p.appendChild(text)
-        return p.innerHTML
-    } */
-
     // ToolTip 
     const tool_tip = document.body.appendChild( createNode(
         { type:'div', id:'tool-tip', classes:['hidden']//, html:'Noter'
@@ -43,49 +31,16 @@ chrome.storage.sync.get('show_tooltip', response => {
         navigator.clipboard.writeText( selected )
     }))
 
-    //chrome.storage.sync.set({notes: []})
     tool_tip.appendChild( createBtn( 'Add', null, e =>{
         if (selected) {
-
-
-            
-
-            // Append new object to note_data
-            //chrome.storage.sync.get('notes', note_data => {
-                /* const url = 
-                const date =  */
-                const new_note = {
-                    name: new Date().toLocaleString(),
-                    collapsed: false,
-                    url: window.location.href,
-                    text: selected                  
-                }
-               /*  if (!note_data.hasOwnProperty('notes')) note_data.notes = []
-                note_data.notes.push(new_note) */
-
-                chrome.runtime.sendMessage({ type: "add", value: new_note });
-                //chrome.storage.sync.set({notes: note_data.notes})
-           // })
-
-            /* chrome.storage.sync.get('notes', note_data => {
-                const url = window.location.href
-                const date = new Date().toLocaleString()
-                const new_note = {
-                    name: date,
-                    collapsed: false,
-                    url: url,
-                    text: escapeHTML(selected)                    
-                }
-                if (!note_data.hasOwnProperty('notes')) note_data.notes = []
-                note_data.notes.push(new_note)
-
-                chrome.runtime.sendMessage({ type: "add", value: new_note });
-            }) */
-
+            const new_note = {
+                url: window.location.href,
+                text: selected                  
+            }            
+            chrome.runtime.sendMessage({ type: "add", value: new_note });
             tool_tip.classList.add('hidden')
         }
     }))
-
 
     addEventListener('resize', e => tool_tip.classList.add('hidden') )
 
