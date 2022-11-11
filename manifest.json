@@ -3,7 +3,7 @@
     "name": "Noter",
     "description": "Save notes for web pages",
     "version": "1.0",
-    "permissions": ["activeTab", "declarativeContent", "storage", "scripting", "contextMenus"],
+    "permissions": ["activeTab", "storage", "contextMenus", "unlimitedStorage"],
     "action": {
       "default_popup": "./html/default_popup.html",
       "default_icon":  "img/icons/icon-128.png"                     

@@ -14,6 +14,10 @@ const img_plus = '../img/buttons/plus.svg'
 const img_minus = '../img/buttons/minus.svg'
 const img_x = '../img/buttons/x.svg'
 
+const no_notes = `<h3>No Notes Saved...</h3>`
+
+// Disable context menu on this page
+window.addEventListener('contextmenu', e => e.preventDefault() )
 
 let note_array = null
 
@@ -44,13 +48,26 @@ for ( const tool_btn of tool_btns ){
     }
 }
 
-document.getElementById('full-btn').onclick = e =>
-    chrome.tabs.create({url:'html/default_popup.html'})
+/* document.getElementById('full-btn').onclick = e =>
+    chrome.tabs.create({url:'html/default_popup.html'}) */
+
+// Collapseable items in the tool menu
+for ( const coll_next of [...document.getElementsByClassName('collapse-next')] ){
+    coll_next.onclick = e =>{
+        let next_sibling = coll_next.nextElementSibling
+        let my_img = coll_next.getElementsByTagName('img')[0]
+        next_sibling.classList.toggle('hidden')
+        let next_hidden = [...next_sibling.classList].includes('hidden')
+        my_img.src = next_hidden ? img_plus : img_minus
+    }
+}
+
     
 // call the click on all collapse buttons that match conditions.
 // we set save to false because we want to send the message after all buttons are processed
 const collapse_all = collapse =>{
     for ( const note of getAllNotes() ){
+        console.log('note')
         const collapse_div = note.getElementsByClassName('note-collapse')[0]
         const collapse_btn = note.getElementsByClassName('btn-collapse')[0]
         const is_collapsed = collapse_div.classList.contains('collapsed')        
@@ -69,15 +86,17 @@ document.getElementById('delete-all').onclick = e => {
     note_array = []
     chrome.runtime.sendMessage({ type: "set", value:"notes", data: [] })
     getAllNotes().forEach( n => n.remove() )
+    content.innerHTML = no_notes
 }
 
-show_tooltip_checkbox.onclick = e =>{
+// Removed Tooltip
+/* show_tooltip_checkbox.onclick = e =>{
     chrome.storage.sync.set({show_tooltip: e.currentTarget.checked})
-}
+} 
 chrome.storage.sync.get('show_tooltip', response => {
     if (!response.hasOwnProperty('show_tooltip')) response.show_tooltip = true
     show_tooltip_checkbox.checked = response.show_tooltip
-})
+})*/
 
 //////////////////////////////////////////////////////////////// Notes
 
@@ -146,9 +165,7 @@ const addNote = ( index, name, url, text, collapsed )=>{
             //note_text_div.innerHTML = escaped
         }
     }
-
-    
-
+  
     // * pass save to setNoteData
     btn_collapse.onclick = (e, save=true) =>{
         console.log('collapse click',save)
@@ -160,9 +177,11 @@ const addNote = ( index, name, url, text, collapsed )=>{
     }
 
     btn_dismiss.onclick = e =>{        
-        note_array.splice( index, 1 )
+        let check_index = note_array.map( obj => obj.text ).indexOf(text)
+        note_array.splice( check_index, 1 )
         chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
         new_note.remove()
+        if (!note_array.length) content.innerHTML = no_notes
     }
 
     btn_copy.onclick = e => 
@@ -181,12 +200,39 @@ const setNoteData = (index, prop, new_val, save=true) =>{
 }
 
 // Init notes
-const getNoteData = (() => {   
-    chrome.runtime.sendMessage({ type: "get", value:"notes" }, response =>{
-        note_array = response
+const getNoteData = (()=> {
+    try{
+        chrome.runtime.sendMessage({ type: "get", value:"notes" }, response =>{
+            // There is a bug in chrome... just send to wake up bg worker
+            // This usually happens on browser load or after inactivity
+        })  
+    }catch(E){
+        console.log(`Error messaging background worker: ${E}`)
+    }
+          
+    chrome.storage.sync.get('notes', note_data => {
+        note_array = note_data.notes || []
+        content.innerHTML = note_array.length ? '' : no_notes
+        
         note_array.forEach( (note, i)=>{
             const { name, text, url, collapsed } = note
             addNote( i, name, url, text, collapsed )
         })
-    });
+        window.scrollTo(0, document.body.scrollHeight);
+    })
+
 })()
+
+// This was getting called before background worker started ?? bug
+/* const getNoteData = (() => {   
+    chrome.runtime.sendMessage({ type: "get", value:"notes" }, response =>{
+        note_array = response
+        console.log('response',response)
+        content.innerHTML = ''
+        note_array.forEach( (note, i)=>{
+            const { name, text, url, collapsed } = note
+            addNote( i, name, url, text, collapsed )
+        })
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+})() */

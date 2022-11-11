@@ -1,12 +1,6 @@
 
-let notes_array = null
+var notes_array = []
 let new_notes = 0
-
-//let fake_dom = new DOMImplementation().createHTMLDocument()
-
-//console.log('Ok', fake_dom)
-
-
 
 const escapeHTML = str =>{ 
   return str.replace(/&/g, "&amp;")
@@ -17,14 +11,13 @@ const escapeHTML = str =>{
 }
 
 const setNewNotesBadge = ()=>{
-  new_notes = notes_array.reduce( ( count, note )=> count += note.viewed ? 0 : 1, 0 )
-  const badge_color = new_notes ? [0,255,0,255] : [100,100,100,255]
+  if (!notes_array) return
+  //new_notes = notes_array.reduce( ( count, note )=> count += note.viewed ? 0 : 1, 0 )
+  const badge_color =  [100,100,100,255] //new_notes ? [0,255,0,255] : [100,100,100,255]
   const note_count = notes_array.length
   chrome.action.setBadgeBackgroundColor( {color: badge_color });
-  chrome.action.setBadgeText({ text: new_notes ? 
-    `${new_notes}/${note_count}` : note_count ? String(note_count) : '' });  
+  chrome.action.setBadgeText({ text: note_count ? String(note_count) : '' });  
 }
-
 
 const addNote = ( url, text ) =>{
   notes_array.push({
@@ -39,43 +32,35 @@ const addNote = ( url, text ) =>{
   chrome.storage.sync.set({notes: notes_array})
 }
 
-
 // Get all notes and prepare
 chrome.storage.sync.get('notes', note_data => {
-    notes_array = note_data.notes || []
-    setNewNotesBadge()
+  console.log('retrieving notes', note_data)
+  notes_array = note_data.notes || []
+  setNewNotesBadge()
 })
 
 
-// Context Menu Item
 
+
+// Context Menu Item
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'add',
     title: 'Add new Note',
-    contexts: ['selection', 'page']
-  })
-
-  function contextClick( info, tab ) {
-    console.log(info, tab )
-    addNote( info.pageUrl, info.selectionText)   
-  }
-  chrome.contextMenus.onClicked.addListener(contextClick)
+    contexts: ['selection']
+  })  
 });
 
-
-
-
-/* chrome.runtime.onConnect.addListener( port =>{
-    console.log('connect')
-
-    port.onDisconnect.addListener(()=>{
-        console.log('disconnect')
-    })
-})
- */
-
-
+// Get selected text from the content script
+// The selectedText leaves out breaks so we have to do this dance
+function contextClick( info, tab ) { 
+  console.log('Context click')
+  chrome.tabs.sendMessage(tab.id, {text: 'get_selected'}, response =>{
+    console.log(response)
+    response && addNote( info.pageUrl, response )
+  })
+}
+chrome.contextMenus.onClicked.addListener(contextClick)
 
 
 
@@ -83,13 +68,27 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
 
+      if ( request.type === "ping"){
+        console.log("PINGED")
+      }
+
       // popup requesting all notes
-      if (request.type === "get" && request.value === 'notes'){      
+      if (request.type === "get" && request.value === 'notes'){ 
+        notes_array.forEach( n => n.viewed = true )
+        sendResponse( notes_array )
+        setNewNotesBadge()        
+        chrome.storage.sync.set({notes: notes_array})        
+      }
+      /* if (request.type === "get" && request.value === 'notes'){ 
+        console.log('getting notes', notes_array)
+        //if (!notes_array) sendResponse( [] )     
         notes_array.forEach( n => n.viewed = true )
         setNewNotesBadge()
-        chrome.storage.sync.set({notes: notes_array})
-        sendResponse( notes_array )
-      }
+        chrome.storage.sync.set({notes: notes_array}, ()=>{
+          sendResponse( notes_array )
+        })
+        
+      } */
 
       // popup setting new note values
       if ( request.type === 'set' && request.value === 'notes' ){        
@@ -105,5 +104,7 @@ chrome.runtime.onMessage.addListener(
         addNote( url, text )
         setNewNotesBadge()
       }
+
     }
 );
+

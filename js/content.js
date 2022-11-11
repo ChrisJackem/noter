@@ -1,3 +1,20 @@
+
+// Send the current selection to the background worker
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+    if (msg.text === 'get_selected') {
+        let selection = document.getSelection()
+        sendResponse( selection.toString() )
+    }
+});
+
+// Chrome makes workers inactive
+// This breaks the context menu so we have to do this...
+chrome.runtime.sendMessage({ type:"ping"})
+setInterval(()=>{
+    chrome.runtime.sendMessage({ type:"ping"})
+}, 30000)
+
+/* 
 // Do not run if show_tooltip is false
 chrome.storage.sync.get('show_tooltip', response => {
     if ( response.hasOwnProperty('show_tooltip') && !response.show_tooltip ) return
@@ -51,7 +68,7 @@ chrome.storage.sync.get('show_tooltip', response => {
         selected = selection.toString()
 
         // No selection
-        if ( !selection || selection.isCollapsed /* ||  anchor_node != focus_node  */){
+        if ( !selection || selection.isCollapsed){
             tool_tip.classList.add('hidden')
             return
         }
@@ -65,4 +82,4 @@ chrome.storage.sync.get('show_tooltip', response => {
         tool_tip.classList.remove('hidden')
     })
 
-})
+}) */
