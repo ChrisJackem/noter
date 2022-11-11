@@ -17,6 +17,15 @@ const img_x = '../img/buttons/x.svg'
 
 let note_array = null
 
+
+const escapeHTML = str =>{ 
+    return str.replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;")
+  }
+
 ////////////////////////////////////////////////////////////////// Tools 
 for ( const tool_btn of tool_btns ){
     tool_btn.onclick = e =>{
@@ -73,7 +82,6 @@ chrome.storage.sync.get('show_tooltip', response => {
 //////////////////////////////////////////////////////////////// Notes
 
 const addNote = ( index, name, url, text, collapsed )=>{
-    console.log(text)    
     const new_note = content.appendChild( dom_parser.parseFromString(
         `<div class='note' data-index=${index}>
             <div class='note-head'>
@@ -132,10 +140,14 @@ const addNote = ( index, name, url, text, collapsed )=>{
             // Save 
             btn_edit.innerHTML = `<img src='${img_rename}'>`
             note_title_h.innerHTML = note_title_input.value
+            let escaped = escapeHTML(note_text_div.innerText)          
             setNoteData( index, 'name', note_title_input.value )
-            setNoteData( index, 'text', note_text_div.innerHTML )
+            setNoteData( index, 'text',  escaped )
+            //note_text_div.innerHTML = escaped
         }
     }
+
+    
 
     // * pass save to setNoteData
     btn_collapse.onclick = (e, save=true) =>{
@@ -152,16 +164,9 @@ const addNote = ( index, name, url, text, collapsed )=>{
         chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
         new_note.remove()
     }
-    
-    btn_copy.onclick = e =>{
-        let dirty_dom = dom_parser.parseFromString( text,'text/html' )
-        navigator.clipboard.writeText( dirty_dom.body.textContent )
-    }
-}
 
-
-const setInputHeight = (name) => {
-    consolr.log(name)
+    btn_copy.onclick = e => 
+        navigator.clipboard.writeText(note_text_div.innerText)
 }
 
 
