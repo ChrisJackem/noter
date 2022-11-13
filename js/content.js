@@ -10,9 +10,9 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 // Chrome makes workers inactive
 // This breaks the context menu so we have to do this...
 chrome.runtime.sendMessage({ type:"ping"})
-setInterval(()=>{
+/* setInterval(()=>{
     chrome.runtime.sendMessage({ type:"ping"})
-}, 30000)
+}, 30000) */
 
 /* 
 // Do not run if show_tooltip is false

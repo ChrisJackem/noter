@@ -251,8 +251,8 @@
 }
  .note-inner .note-text{
     width: 100%;
-    white-space: pre-wrap;
     word-break: break-all;
+    white-space: pre-wrap;
     font-family: var(--code-font);
     margin: 0.2rem 0;
     padding: 0.5rem;
