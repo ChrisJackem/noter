@@ -27,15 +27,19 @@ const addNote = ( url, text ) =>{
     collapsed: false,
     viewed: false
   })
+  //new_notes += 1
   setNewNotesBadge( new_notes )
   chrome.storage.sync.set({notes: notes_array})
 }
 
-// Init - Get all notes and prepare
+// Get all notes and prepare
 chrome.storage.sync.get('notes', note_data => {
+  console.log('retrieving notes', note_data)
   notes_array = note_data.notes || []
   setNewNotesBadge()
 })
+
+
 
 
 // Context Menu Item
@@ -50,11 +54,15 @@ chrome.runtime.onInstalled.addListener(() => {
 // Get selected text from the content script
 // The selectedText leaves out breaks so we have to do this dance
 function contextClick( info, tab ) { 
+  console.log('Context click')
   chrome.tabs.sendMessage(tab.id, {text: 'get_selected'}, response =>{
+    console.log(response)
     response && addNote( info.pageUrl, response )
   })
 }
 chrome.contextMenus.onClicked.addListener(contextClick)
+
+
 
 
 chrome.runtime.onMessage.addListener(

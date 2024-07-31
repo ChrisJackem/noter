@@ -1,4 +1,3 @@
-
 // Send the current selection to the background worker
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     if (msg.text === 'get_selected') {
@@ -9,4 +8,4 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
 // Chrome makes workers inactive
 // This breaks the context menu so we have to do this...
-chrome.runtime.sendMessage({ type:"ping"});
+chrome.runtime.sendMessage({ type:"ping"})

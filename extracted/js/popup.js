@@ -1,48 +1,25 @@
 
-
-
-
-
-// TODO :: Full Screen almost works, need many css hacks right now
-/* document.getElementById('full-btn').onclick = e =>
-    chrome.tabs.create({url:'html/default_popup.html'}) */
-
-// Removed Tooltip
-/* show_tooltip_checkbox.onclick = e =>{
-    chrome.storage.sync.set({show_tooltip: e.currentTarget.checked})
-} 
-chrome.storage.sync.get('show_tooltip', response => {
-    if (!response.hasOwnProperty('show_tooltip')) response.show_tooltip = true
-    show_tooltip_checkbox.checked = response.show_tooltip
-})*/
-
-// Disable context menu on this page
-window.addEventListener('contextmenu', e => e.preventDefault() )
-
-// Store DOM
 const actions = document.getElementById('actions')
 const content = document.getElementById('content')
 const tool_menu = document.getElementById('tools')
 const tool_btns = [...tool_menu.getElementsByClassName('tool-btn')]
 const show_tooltip_checkbox = document.getElementById('tooltip-box')
+const getAllNotes = ()=> [...content.getElementsByClassName('note')]
+const dom_parser = new DOMParser()
 
-// Button image paths
-const img_save = '../img/buttons/save.svg';
-const img_rename = '../img/buttons/rename.svg';
-const img_copy = '../img/buttons/copy.svg';
-const img_plus = '../img/buttons/plus.svg';
-const img_minus = '../img/buttons/minus.svg';
-const img_x = '../img/buttons/x.svg';
+const img_save = '../img/buttons/save.svg'
+const img_rename = '../img/buttons/rename.svg'
+const img_copy = '../img/buttons/copy.svg'
+const img_plus = '../img/buttons/plus.svg'
+const img_minus = '../img/buttons/minus.svg'
+const img_x = '../img/buttons/x.svg'
 
-let note_array = null;
-const no_notes = `<h3>No Notes Saved...</h3>`;
+const no_notes = `<h3>No Notes Saved...</h3>`
 
-const dom_parser = new DOMParser();
+// Disable context menu on this page
+window.addEventListener('contextmenu', e => e.preventDefault() )
 
-
-///////////////////////////////////////////////////////////////// Helpers
-
-const getAllNotes = ()=> [...content.getElementsByClassName('note')];
+let note_array = null
 
 const escapeHTML = str =>{ 
     return str.replace(/&/g, "&amp;")
@@ -80,11 +57,12 @@ for ( const coll_next of [...document.getElementsByClassName('collapse-next')] )
         my_img.src = next_hidden ? img_plus : img_minus
     }
 }
-
+    
 // call the click on all collapse buttons that match conditions.
 // we set save to false because we want to send the message after all buttons are processed
 const collapse_all = collapse =>{
     for ( const note of getAllNotes() ){
+        console.log('note')
         const collapse_div = note.getElementsByClassName('note-collapse')[0]
         const collapse_btn = note.getElementsByClassName('btn-collapse')[0]
         const is_collapsed = collapse_div.classList.contains('collapsed')        
@@ -108,7 +86,6 @@ document.getElementById('delete-all').onclick = e => {
 
 //////////////////////////////////////////////////////////////// Notes
 
-// New note
 const addNote = ( index, name, url, text, collapsed )=>{
     const new_note = content.appendChild( dom_parser.parseFromString(
         `<div class='note' data-index=${index}>
@@ -197,7 +174,6 @@ const addNote = ( index, name, url, text, collapsed )=>{
         navigator.clipboard.writeText(note_text_div.innerText)
 }
 
-
 // * Set save to false for batch operations (save later)
 const setNoteData = (index, prop, new_val, save=true) =>{
     console.log(index, prop, new_val)
@@ -209,16 +185,7 @@ const setNoteData = (index, prop, new_val, save=true) =>{
 }
 
 // Init notes
-const getNoteData = (()=> {
-    try{
-        chrome.runtime.sendMessage({ type: "get", value:"notes" }, response =>{
-            // There is a bug in chrome... just send to wake up bg worker
-            // This usually happens on browser load or after inactivity
-        })  
-    }catch(E){
-        console.log(`Error messaging background worker: ${E}`)
-    }
-          
+const getNoteData = (()=> {         
     chrome.storage.sync.get('notes', note_data => {
         note_array = note_data.notes || []
         content.innerHTML = note_array.length ? '' : no_notes
