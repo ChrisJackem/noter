@@ -20,11 +20,12 @@ chrome.storage.sync.get('show_tooltip', response => {
 window.addEventListener('contextmenu', e => e.preventDefault() )
 
 // Store DOM
-const actions = document.getElementById('actions')
-const content = document.getElementById('content')
-const tool_menu = document.getElementById('tools')
-const tool_btns = [...tool_menu.getElementsByClassName('tool-btn')]
-const show_tooltip_checkbox = document.getElementById('tooltip-box')
+const output = document.getElementById('output');
+const actions = document.getElementById('actions');
+const content = document.getElementById('content');
+const tool_menu = document.getElementById('tools');
+const tool_btns = [...tool_menu.getElementsByClassName('tool-btn')];
+const show_tooltip_checkbox = document.getElementById('tooltip-box');
 
 // Button image paths
 const img_save = '../img/buttons/save.svg';
@@ -38,6 +39,7 @@ let note_array = null;
 const no_notes = `<h3>No Notes Saved...</h3>`;
 
 const dom_parser = new DOMParser();
+var output_timer = null;
 
 
 ///////////////////////////////////////////////////////////////// Helpers
@@ -50,7 +52,23 @@ const escapeHTML = str =>{
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;")
-  }
+}
+
+// Output
+const writeToOutput = str => {
+    if (output_timer){
+        window.clearTimeout(output_timer);
+    }else{
+        output.innerHTML = '';
+    }
+    output.innerHTML += `<div>${str}</div>`;
+    output.classList.add('showing');
+
+    output_timer = window.setTimeout( ()=>{
+        output.classList.remove('showing');        
+        output_timer = null;
+    }, 3000);
+}
 
 ////////////////////////////////////////////////////////////////// Tools 
 for ( const tool_btn of tool_btns ){
@@ -84,26 +102,39 @@ for ( const coll_next of [...document.getElementsByClassName('collapse-next')] )
 // call the click on all collapse buttons that match conditions.
 // we set save to false because we want to send the message after all buttons are processed
 const collapse_all = collapse =>{
+    let count = 0;
     for ( const note of getAllNotes() ){
         const collapse_div = note.getElementsByClassName('note-collapse')[0]
         const collapse_btn = note.getElementsByClassName('btn-collapse')[0]
         const is_collapsed = collapse_div.classList.contains('collapsed')        
         if ( collapse ){
-            !is_collapsed && collapse_btn.onclick(null, false)            
+            if ( !is_collapsed ){
+                count++;
+                collapse_btn.onclick(null, false);
+            }       
         }else{
-            is_collapsed && collapse_btn.onclick(null, false)            
-        }
+            if ( is_collapsed ){
+                count++;
+                collapse_btn.onclick(null, false);
+            }          
+        }    
     }
+    writeToOutput(`${collapse?'Collapsed':'Expanded'} ${count ? count : 'no'} note${(count>1 || count==0) ? 's' : ''}.`);
     chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
 }
 document.getElementById('collapse-all').onclick = e => collapse_all( true )
 document.getElementById('uncollapse-all').onclick = e => collapse_all( false )
 
 document.getElementById('delete-all').onclick = e => {
-    note_array = []
-    chrome.runtime.sendMessage({ type: "set", value:"notes", data: [] })
-    getAllNotes().forEach( n => n.remove() )
-    content.innerHTML = no_notes
+    note_array = [];
+    chrome.runtime.sendMessage({ type: "set", value:"notes", data: [] });
+    let count = 0;
+    getAllNotes().forEach( n => {
+        count++;
+        n.remove()
+    } );
+    content.innerHTML = no_notes;
+    writeToOutput(`Deleted ${count?count:'no'} note${count>1 || !count ? 's' : ''}.`);
 }
 
 //////////////////////////////////////////////////////////////// Notes
@@ -172,6 +203,7 @@ const addNote = ( index, name, url, text, collapsed )=>{
             setNoteData( index, 'name', note_title_input.value )
             setNoteData( index, 'text',  escaped )
             //note_text_div.innerHTML = escaped
+            writeToOutput('Note changed.');
         }
     }
   
@@ -190,11 +222,17 @@ const addNote = ( index, name, url, text, collapsed )=>{
         note_array.splice( check_index, 1 )
         chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
         new_note.remove()
-        if (!note_array.length) content.innerHTML = no_notes
+        if (!note_array.length) content.innerHTML = no_notes;
+        writeToOutput(`Deleted note.`);
     }
 
-    btn_copy.onclick = e => 
-        navigator.clipboard.writeText(note_text_div.innerText)
+    btn_copy.onclick = e => {
+        navigator.clipboard.writeText( note_text_div.innerText );
+        writeToOutput(`Copied note to clipboard.`);
+    }
+        
+
+    
 }
 
 
