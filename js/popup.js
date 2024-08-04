@@ -123,12 +123,15 @@ const collapse_all = collapse =>{
     writeToOutput(`${collapse?'Collapsed':'Expanded'} ${count ? count : 'no'} note${(count>1 || count==0) ? 's' : ''}.`);
     chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
 }
-document.getElementById('collapse-all').onclick = e => collapse_all( true )
-document.getElementById('uncollapse-all').onclick = e => collapse_all( false )
+document.getElementById('collapse-all').onclick = e => collapse_all( true );
+document.getElementById('uncollapse-all').onclick = e => collapse_all( false );
 
+
+// Delete button initiates delete_modal modal
 document.getElementById('delete-all').onclick = e => {
-
-    showModal( delete_modal, "Every single note", ()=>{
+    let length = note_array.length;
+    if (length == 0) return;
+    showModal( delete_modal, `${length} note${length > 1 ? 's' : ''}`, ()=>{
         note_array = [];
         chrome.runtime.sendMessage({ type: "set", value:"notes", data: [] });
         let count = 0;
@@ -139,33 +142,22 @@ document.getElementById('delete-all').onclick = e => {
         content.innerHTML = no_notes;
         writeToOutput(`Deleted ${count?count:'no'} note${count>1 || !count ? 's' : ''}.`);
     });
-
-    /* note_array = [];
-    chrome.runtime.sendMessage({ type: "set", value:"notes", data: [] });
-    let count = 0;
-    getAllNotes().forEach( n => {
-        count++;
-        n.remove()
-    } );
-    content.innerHTML = no_notes;
-    writeToOutput(`Deleted ${count?count:'no'} note${count>1 || !count ? 's' : ''}.`); */
 }
 
 const showModal = ( element, text, callback=null ) => {
     element.classList.remove('hidden');
-
     let text_node = element.getElementsByClassName('modal-text')[0];
     let btn_y = element.getElementsByClassName('yes')[0];
     let btn_n = element.getElementsByClassName('no')[0];
-
-    if (text_node) text_node.innerHTML = `${text}?`;
-    
+    if (text_node) text_node.innerHTML = `${text}?`;    
+    // confirm
     if  (btn_y){
         btn_y.onclick = () =>{
             element.classList.add('hidden');
             if (callback) callback();       
         }
     }
+    // cancel
     if  (btn_n){
         btn_n.onclick = () =>{
             element.classList.add('hidden');
@@ -174,31 +166,28 @@ const showModal = ( element, text, callback=null ) => {
 }
 
 //////////////////////////////////////////////////////////////// Notes
-
-// New note
 const addNote = ( index, name, url, text, collapsed )=>{
     const new_note = content.appendChild( dom_parser.parseFromString(
         `<div class='note' data-index=${index}>
             <div class='note-head'>
                 <h3 class='flex-left'>${name}</h3>
                 <input type='text' class='hidden' value='${name}' tabindex=1 maxlength="50">                
-                <button class='btn-edit'>
+                <button class='btn-edit tool' text="Edit Note">
                     <img src='${img_rename}'>
                 </button>                
-                <button class='btn-copy'>
+                <button class='btn-copy tool' text="Copy to Clipboard">
                     <img src='${img_copy}'>
                 </button>                
-                <button class='btn-collapse'>
+                <button class='btn-collapse tool' text="${collapsed ? 'Expand Note': 'Collapse Note'}">
                     <img src='${collapsed ? img_plus : img_minus}'>
                 </button>                
-                <button class='btn-dismiss'>
+                <button class='btn-dismiss tool' text="Delete Note">
                     <img src='${img_x}'>
                 </button>
             </div>
             <div class='note-collapse ${collapsed ? 'collapsed' : ''}'>
                 <div class='note-inner'>
-                    <pre class='note-text rounded' spellcheck=false tabindex=2>${text}</pre>
-                    
+                    <pre class='note-text rounded' spellcheck=false tabindex=2>${text}</pre>                    
                 </div>
                 <div class='note-footer'>
                     <small><a class='note-link' href='${url}'>${url}</a></small>
@@ -245,21 +234,31 @@ const addNote = ( index, name, url, text, collapsed )=>{
   
     // * pass save to setNoteData
     btn_collapse.onclick = (e, save=true) =>{
-        console.log('collapse click',save)
         const collapse_div = new_note.getElementsByClassName('note-collapse')[0]        
         const is_collapsed = [...collapse_div.classList].includes('collapsed')
         btn_collapse.innerHTML = `<img src='${ is_collapsed ? img_minus : img_plus}'>`    
         collapse_div.classList.toggle('collapsed')
         setNoteData(index, 'collapsed', !is_collapsed, save)
+        btn_collapse.setAttribute('text', is_collapsed ? 'Collapse Note' : 'Expand Note')
     }
 
-    btn_dismiss.onclick = e =>{        
-        let check_index = note_array.map( obj => obj.text ).indexOf(text)
+    btn_dismiss.onclick = e =>{
+        // Modal
+        showModal( delete_modal, `${name}`, ()=>{
+            let check_index = note_array.map( obj => obj.text ).indexOf(text)
+            note_array.splice( check_index, 1 )
+            chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
+            new_note.remove()
+            if (!note_array.length) content.innerHTML = no_notes;
+            writeToOutput(`Deleted note.`);
+        });
+        
+        /* let check_index = note_array.map( obj => obj.text ).indexOf(text)
         note_array.splice( check_index, 1 )
         chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
         new_note.remove()
         if (!note_array.length) content.innerHTML = no_notes;
-        writeToOutput(`Deleted note.`);
+        writeToOutput(`Deleted note.`); */
     }
 
     btn_copy.onclick = e => {
@@ -274,7 +273,6 @@ const addNote = ( index, name, url, text, collapsed )=>{
 
 // * Set save to false for batch operations (save later)
 const setNoteData = (index, prop, new_val, save=true) =>{
-    console.log(index, prop, new_val)
     const obj = note_array[parseInt(index)]
     obj[prop] = new_val
     if (save){
