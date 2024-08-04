@@ -26,6 +26,7 @@ const content = document.getElementById('content');
 const tool_menu = document.getElementById('tools');
 const tool_btns = [...tool_menu.getElementsByClassName('tool-btn')];
 const show_tooltip_checkbox = document.getElementById('tooltip-box');
+const delete_modal = document.getElementById('delete-confirm-modal');
 
 // Button image paths
 const img_save = '../img/buttons/save.svg';
@@ -125,8 +126,21 @@ const collapse_all = collapse =>{
 document.getElementById('collapse-all').onclick = e => collapse_all( true )
 document.getElementById('uncollapse-all').onclick = e => collapse_all( false )
 
-/* document.getElementById('delete-all').onclick = e => {
-    note_array = [];
+document.getElementById('delete-all').onclick = e => {
+
+    showModal( delete_modal, "Every single note", ()=>{
+        note_array = [];
+        chrome.runtime.sendMessage({ type: "set", value:"notes", data: [] });
+        let count = 0;
+        getAllNotes().forEach( n => {
+            count++;
+            n.remove()
+        } );
+        content.innerHTML = no_notes;
+        writeToOutput(`Deleted ${count?count:'no'} note${count>1 || !count ? 's' : ''}.`);
+    });
+
+    /* note_array = [];
     chrome.runtime.sendMessage({ type: "set", value:"notes", data: [] });
     let count = 0;
     getAllNotes().forEach( n => {
@@ -134,8 +148,30 @@ document.getElementById('uncollapse-all').onclick = e => collapse_all( false )
         n.remove()
     } );
     content.innerHTML = no_notes;
-    writeToOutput(`Deleted ${count?count:'no'} note${count>1 || !count ? 's' : ''}.`);
-} */
+    writeToOutput(`Deleted ${count?count:'no'} note${count>1 || !count ? 's' : ''}.`); */
+}
+
+const showModal = ( element, text, callback=null ) => {
+    element.classList.remove('hidden');
+
+    let text_node = element.getElementsByClassName('modal-text')[0];
+    let btn_y = element.getElementsByClassName('yes')[0];
+    let btn_n = element.getElementsByClassName('no')[0];
+
+    if (text_node) text_node.innerHTML = `${text}?`;
+    
+    if  (btn_y){
+        btn_y.onclick = () =>{
+            element.classList.add('hidden');
+            if (callback) callback();       
+        }
+    }
+    if  (btn_n){
+        btn_n.onclick = () =>{
+            element.classList.add('hidden');
+        }
+    }
+}
 
 //////////////////////////////////////////////////////////////// Notes
 
