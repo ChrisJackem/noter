@@ -9,9 +9,21 @@
 </head>
 <body id="noter-body">
 
-
     <div id="output"></div>
 
+    <div class="modal hidden">
+        <div id="confirm" class="modal-inner">
+            <h2>Confirm Delete</h2>
+            <div>
+                <h4>Are you sure you want to delete</h4>
+                <span id="modal-name">Name</span>?
+            </div>
+            <div id="confirm-btns">
+                <button>Yes</button>
+                <button>No</button>
+            </div>
+        </div>
+    </div>
 
     <div id="header">
 
@@ -26,34 +38,21 @@
 
         <div id="title-btns">
             <button id="uncollapse-all" class="tool tool-header-btn" text="Expand All">
-                <img src="../img/buttons/expand_all.svg">
+                <img src="../img/buttons/plus.svg">
             </button>
             <button id="collapse-all" class="tool tool-header-btn" text="Collapse All">
-                <img src="../img/buttons/collapse_all.svg">
+                <img src="../img/buttons/minus.svg">
+            </button>            
+            <button id="delete-all" class="tool tool-header-btn btn-dismiss" text="Delete All">
+                <img src="../img/buttons/x.svg">
+            </button>            
+            <button id="help" class="tool tool-header-btn" text="Show Help">
+                <img src="../img/buttons/help.svg">
             </button>            
         </div>
     </div>
 
-
-    <div id="tools" class="rounded">
-
-        <!-- <div id="title-bar">
-            <div id="logo">
-                <img src="../img/icons/icon_new.svg">
-                <h2>Noter</h2>                
-            </div>
-            
-            <button id="tool-tools" class="tool-btn unselected" data-div="actions">Tools</button>   
-            <button id="tool-help" class="tool-btn unselected" data-div="help">Help</button>   
-        </div> -->
-
-        <!-- <div id="settings" class="top-menu hidden">
-            <div id='tooltip-check' class="checkboxed">
-                <input type="checkbox" id="tooltip-box" name="tooltip-toggle" checked>
-                Show tooltip
-            </div>
-            
-        </div> -->
+    <div id="tools" class="rounded">        
         <div id="help" class="top-menu hidden">
             <div class="flex-grow help-item"> 
                 <div class="collapse-next">How to save a Note<img src="../img/buttons/plus.svg"></div>
@@ -112,14 +111,6 @@
             </div>
         </div>
         
-
-        <!-- <div id="actions" class="top-menu hidden">                  
-            <button id="delete-all">Delete All</button>
-            <button id="collapse-all">Collapse All</button>
-            <button id="uncollapse-all">Expand All</button>            
-        </div> 
-        -->
-
     </div>
 
     <div id="content">
