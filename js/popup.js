@@ -21,7 +21,7 @@ window.addEventListener('contextmenu', e => e.preventDefault() )
 
 // Store DOM
 const output = document.getElementById('output');
-const actions = document.getElementById('actions');
+//const actions = document.getElementById('actions');
 const content = document.getElementById('content');
 const tool_menu = document.getElementById('tools');
 const tool_btns = [...tool_menu.getElementsByClassName('tool-btn')];
@@ -125,7 +125,7 @@ const collapse_all = collapse =>{
 document.getElementById('collapse-all').onclick = e => collapse_all( true )
 document.getElementById('uncollapse-all').onclick = e => collapse_all( false )
 
-document.getElementById('delete-all').onclick = e => {
+/* document.getElementById('delete-all').onclick = e => {
     note_array = [];
     chrome.runtime.sendMessage({ type: "set", value:"notes", data: [] });
     let count = 0;
@@ -135,7 +135,7 @@ document.getElementById('delete-all').onclick = e => {
     } );
     content.innerHTML = no_notes;
     writeToOutput(`Deleted ${count?count:'no'} note${count>1 || !count ? 's' : ''}.`);
-}
+} */
 
 //////////////////////////////////////////////////////////////// Notes
 
