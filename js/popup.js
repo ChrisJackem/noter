@@ -21,10 +21,15 @@ window.addEventListener('contextmenu', e => e.preventDefault() )
 
 // Store DOM
 const output = document.getElementById('output');
+
+/* const help_modal = document.getElementById('help-modal');
+const help_init = document.getElementById('help-init');
+const help_dismiss = document.getElementById('help-dismiss'); */
+
 //const actions = document.getElementById('actions');
 const content = document.getElementById('content');
 const tool_menu = document.getElementById('tools');
-const tool_btns = [...tool_menu.getElementsByClassName('tool-btn')];
+//const tool_btns = [...tool_menu.getElementsByClassName('tool-btn')];
 const show_tooltip_checkbox = document.getElementById('tooltip-box');
 const delete_modal = document.getElementById('delete-confirm-modal');
 
@@ -72,7 +77,7 @@ const writeToOutput = str => {
 }
 
 ////////////////////////////////////////////////////////////////// Tools 
-for ( const tool_btn of tool_btns ){
+/* for ( const tool_btn of tool_btns ){
     tool_btn.onclick = e =>{
         // Reset everything
         [...tool_menu.getElementsByClassName('top-menu')].forEach( d => d.classList.add('hidden'))
@@ -87,7 +92,7 @@ for ( const tool_btn of tool_btns ){
             document.getElementById(div_id).classList.remove('hidden')
         }
     }
-}
+} */
 
 // Collapseable items in the tool menu
 for ( const coll_next of [...document.getElementsByClassName('collapse-next')] ){
@@ -165,6 +170,16 @@ const showModal = ( element, text, callback=null ) => {
     }
 }
 
+// Help
+const help_modal = document.getElementById('help-modal');
+document.getElementById('help-init').onclick = ()=>{
+    help_modal.classList.remove('hidden');
+}
+document.getElementById('help-dismiss').onclick = ()=>{
+    help_modal.classList.add('hidden');
+};
+
+
 //////////////////////////////////////////////////////////////// Notes
 const addNote = ( index, name, url, text, collapsed )=>{
     const new_note = content.appendChild( dom_parser.parseFromString(
@@ -211,6 +226,7 @@ const addNote = ( index, name, url, text, collapsed )=>{
         e => chrome.tabs.create({ active:true, url:note_anchor.href })
 
     btn_edit.onclick = e =>{
+        // 'hidden' class decides the state of the edit button
         const header_showing = [...note_title_h.classList].includes('hidden')
         note_title_input.classList.toggle('hidden')
         note_title_h.classList.toggle('hidden')
@@ -218,8 +234,9 @@ const addNote = ( index, name, url, text, collapsed )=>{
         note_text_div.classList.toggle('editable')
         
         if (!header_showing){
+            // Edit
             note_title_input.select()
-            btn_edit.innerHTML = `<img src='${img_save}'>`
+            btn_edit.innerHTML = `<img src='${img_save}'>`            
         }else{
             // Save 
             btn_edit.innerHTML = `<img src='${img_rename}'>`
@@ -227,17 +244,19 @@ const addNote = ( index, name, url, text, collapsed )=>{
             let escaped = escapeHTML(note_text_div.innerText)          
             setNoteData( index, 'name', note_title_input.value )
             setNoteData( index, 'text',  escaped )
-            //note_text_div.innerHTML = escaped
             writeToOutput('Note changed.');
         }
-    }
+        // Tooltip
+        btn_edit.setAttribute('text', header_showing ? "Edit Note" : "Save Note")
+    } 
   
-    // * pass save to setNoteData
+    
     btn_collapse.onclick = (e, save=true) =>{
         const collapse_div = new_note.getElementsByClassName('note-collapse')[0]        
         const is_collapsed = [...collapse_div.classList].includes('collapsed')
         btn_collapse.innerHTML = `<img src='${ is_collapsed ? img_minus : img_plus}'>`    
         collapse_div.classList.toggle('collapsed')
+        // pass save to setNoteData
         setNoteData(index, 'collapsed', !is_collapsed, save)
         btn_collapse.setAttribute('text', is_collapsed ? 'Collapse Note' : 'Expand Note')
     }
@@ -265,11 +284,7 @@ const addNote = ( index, name, url, text, collapsed )=>{
         navigator.clipboard.writeText( note_text_div.innerText );
         writeToOutput(`Copied note to clipboard.`);
     }
-        
-
-    
 }
-
 
 // * Set save to false for batch operations (save later)
 const setNoteData = (index, prop, new_val, save=true) =>{

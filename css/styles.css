@@ -40,6 +40,11 @@
     margin: 0.5rem 0;
     width: 100%;
 }
+.center-children{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 /* Output */
 #output{
@@ -53,15 +58,47 @@
     border-radius: 0.25rem;
     z-index: 99999;
     position: fixed;
-    right: 0.25rem;
-    bottom: -100%;    
+    top: -100%;
+    right: 50%;
+    transform: translateX(50%);
+    /* right: 0.25rem;
+    bottom: -100%;  */   
     transition: all 700ms ease-out;
 }
 #output.showing{
-    bottom: 0.25rem;
+    top: 0.75rem;
 }
 
-/* Dialog / Modals */
+.sticky-top{
+    position: sticky;
+}
+
+/***************************************************************/
+/*              Dialog / Modals                                */
+/***************************************************************/
+@keyframes fadeIn {
+    from{ opacity: 0; }
+    to{ opacity: 1; }
+}
+
+/* Help Modal */
+body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
+    height: 600px;
+    /* height: 100%;  */
+    overflow-y: hidden;
+}
+#help-modal-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#help-modal .modal-inner{
+    width: 90%;
+    height: 90%;
+    overflow-y: auto;
+}
+
+
 .modal{
     width: 100%;
     height: 100%;
@@ -72,15 +109,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: center;  
 }
+.modal:not(.hidden){    
+    animation: fadeIn 300ms ease-out forwards;
+}
+
 .modal-inner{    
     color: black;        
     background-color: white;
     padding: 1rem;
     border-radius: 0.5rem;
     border: 2px solid black;
-    
+    filter: drop-shadow( 5px 5px 10px #1b1b1b );
 }
 
 #confirm{
@@ -166,7 +207,12 @@
     } 
 
 /* All Images in toolbar */
-#title img, #title-btns img{
+/* #title img, #title-btns img{
+    width: 100%;
+    height: auto;
+} */
+
+.fill-img{
     width: 100%;
     height: auto;
 }
@@ -198,7 +244,9 @@
     height: 100% !important;
 }
 
+/***************************************************************/
 /* TOOLTIPS - Make sure .tool class has a 'text' attribute set */
+/***************************************************************/
 .tool{    
     text-align: center;
     position: relative;
@@ -231,33 +279,31 @@
     }
 
 
-.top-menu{
-    /* display: flex;
-    align-items: center; */
+/* .top-menu{
     background-color: var(--neutral-grey);
     padding: 0.5rem 1rem;
     border-radius: 4px;
     margin: 0 0.5rem 0.5rem 0.5rem;
-    /* min-height: 50px; */
     background: linear-gradient(var(--neutral-grey), var(--dark-grey));
     line-height: 1.35rem;;
-}
+} */
 
-.top-menu li::marker{
+#help li::marker{
     font-size: 18px;
     font-weight: bold;
 }
-.top-menu li{
-    margin-left: 1.25rem;
+#help li{
+    margin-left: 1.5rem;
     margin-bottom: 0.25rem;
     
 }
-.top-menu li strong{
+#help li strong{
     font-size: 16px;
-    color: #dadada;
+    color: var(--dark-grey);
 }
 
 .collapse-next{
+    color: white;
     position: relative;
     font-weight: bold;
     font-size: 18px;
