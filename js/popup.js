@@ -1,8 +1,3 @@
-
-
-
-
-
 // TODO :: Full Screen almost works, need many css hacks right now
 /* document.getElementById('full-btn').onclick = e =>
     chrome.tabs.create({url:'html/default_popup.html'}) */
@@ -21,17 +16,12 @@ window.addEventListener('contextmenu', e => e.preventDefault() )
 
 // Store DOM
 const output = document.getElementById('output');
-
-/* const help_modal = document.getElementById('help-modal');
-const help_init = document.getElementById('help-init');
-const help_dismiss = document.getElementById('help-dismiss'); */
-
-//const actions = document.getElementById('actions');
 const content = document.getElementById('content');
 const tool_menu = document.getElementById('tools');
-//const tool_btns = [...tool_menu.getElementsByClassName('tool-btn')];
 const show_tooltip_checkbox = document.getElementById('tooltip-box');
 const delete_modal = document.getElementById('delete-confirm-modal');
+const header_div = document.getElementById('header');
+const button_lock = document.getElementById('lock-tools');
 
 // Button image paths
 const img_save = '../img/buttons/save.svg';
@@ -40,13 +30,35 @@ const img_copy = '../img/buttons/copy.svg';
 const img_plus = '../img/buttons/plus.svg';
 const img_minus = '../img/buttons/minus.svg';
 const img_x = '../img/buttons/x.svg';
+const img_lock = '../img/buttons/locked.svg';
+const img_unlock = '../img/buttons/unlocked.svg';
 
 let note_array = null;
-const no_notes = `<h3>No Notes Saved...</h3>`;
-
-const dom_parser = new DOMParser();
 var output_timer = null;
+var locked = true;
+const no_notes = `<h3>No notes saved...</h3>`;
+const dom_parser = new DOMParser();
 
+///////////////////////////////////////////////////////////////// Header / Lock Logic
+window.onscroll = ()=>{
+    if (window.scrollY){
+        if (locked) header_div.classList.add('sticky-top')
+    }else{
+        header_div.classList.remove('sticky-top')
+    }
+}
+
+// Lock Button
+button_lock.onclick = ()=>{
+    locked = !locked;
+    if ( locked ){
+        header_div.classList.add('sticky-top');
+    }else{
+        header_div.classList.remove('sticky-top');
+    }
+    button_lock.innerHTML = `<img class="fill-img" src="${locked ? img_lock : img_unlock}">`;
+    button_lock.setAttribute('text', locked ? "Lock to Screen" : "Static Tools")
+}
 
 ///////////////////////////////////////////////////////////////// Helpers
 
@@ -77,22 +89,6 @@ const writeToOutput = str => {
 }
 
 ////////////////////////////////////////////////////////////////// Tools 
-/* for ( const tool_btn of tool_btns ){
-    tool_btn.onclick = e =>{
-        // Reset everything
-        [...tool_menu.getElementsByClassName('top-menu')].forEach( d => d.classList.add('hidden'))
-        tool_btns.forEach( tb =>{
-            if ( tb === tool_btn ) return
-            tb.classList.add( 'unselected' )
-        })
-        // Toggle btn and div id set in data-div
-        tool_btn.classList.toggle('unselected')
-        if ( !tool_btn.classList.contains('unselected') ){
-            const div_id = tool_btn.getAttribute('data-div')
-            document.getElementById(div_id).classList.remove('hidden')
-        }
-    }
-} */
 
 // Collapseable items in the tool menu
 for ( const coll_next of [...document.getElementsByClassName('collapse-next')] ){
@@ -107,6 +103,7 @@ for ( const coll_next of [...document.getElementsByClassName('collapse-next')] )
 
 // call the click on all collapse buttons that match conditions.
 // we set save to false because we want to send the message after all buttons are processed
+// Listeners for collapsing both use this
 const collapse_all = collapse =>{
     let count = 0;
     for ( const note of getAllNotes() ){
@@ -128,6 +125,7 @@ const collapse_all = collapse =>{
     writeToOutput(`${collapse?'Collapsed':'Expanded'} ${count ? count : 'no'} note${(count>1 || count==0) ? 's' : ''}.`);
     chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
 }
+
 document.getElementById('collapse-all').onclick = e => collapse_all( true );
 document.getElementById('uncollapse-all').onclick = e => collapse_all( false );
 
@@ -173,11 +171,14 @@ const showModal = ( element, text, callback=null ) => {
 // Help
 const help_modal = document.getElementById('help-modal');
 document.getElementById('help-init').onclick = ()=>{
+
     help_modal.classList.remove('hidden');
 }
 document.getElementById('help-dismiss').onclick = ()=>{
     help_modal.classList.add('hidden');
 };
+
+
 
 
 //////////////////////////////////////////////////////////////// Notes
@@ -270,14 +271,7 @@ const addNote = ( index, name, url, text, collapsed )=>{
             new_note.remove()
             if (!note_array.length) content.innerHTML = no_notes;
             writeToOutput(`Deleted note.`);
-        });
-        
-        /* let check_index = note_array.map( obj => obj.text ).indexOf(text)
-        note_array.splice( check_index, 1 )
-        chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
-        new_note.remove()
-        if (!note_array.length) content.innerHTML = no_notes;
-        writeToOutput(`Deleted note.`); */
+        });        
     }
 
     btn_copy.onclick = e => {

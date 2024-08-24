@@ -9,13 +9,42 @@
 </head>
 <body id="noter-body">
 
+    <div id="header" class="sticky-top">
+        <div id="title">
+            <div id="icon">
+                <img class="fill-img" src="../img/icons/icon_new.svg">
+            </div>            
+            <div id="title-text">
+                <img class="fill-img"src="../img/icons/noter_logo_text.svg">                
+            </div>                     
+        </div>
+
+        <div id="title-btns">
+            <button id="lock-tools" class="tool tool-header-btn" text="Unlock Tools" style="padding:4px;">
+                <img class="fill-img" src="../img/buttons/locked.svg">
+            </button>            
+            <button id="help-init" class="tool tool-header-btn" text="Show Help">
+                <img  class="fill-img" src="../img/buttons/help.svg">
+            </button>            
+            <button id="uncollapse-all" class="tool tool-header-btn" text="Expand All">
+                <img  class="fill-img" src="../img/buttons/plus.svg">
+            </button>
+            <button id="collapse-all" class="tool tool-header-btn" text="Collapse All">
+                <img  class="fill-img" src="../img/buttons/minus.svg">
+            </button>            
+            <button id="delete-all" class="tool tool-header-btn btn-dismiss" text="Delete All">
+                <img  class="fill-img" src="../img/buttons/x.svg">
+            </button>            
+        </div>
+    </div>
+
     <div id="output"></div>
 
     <!-------------- Help Modal ---------------------->
     <div id="help-modal" class="modal hidden">        
         <div id="help" class="modal-inner">
 
-            <div id="help-modal-header" class="sticky-top">
+            <div id="help-modal-header">
                 <h2>Noter Help</h2>
                 <button id="help-dismiss" class="btn-dismiss tool" text="Close">
                     <img src='../img/buttons/x.svg'>
@@ -100,7 +129,7 @@
     </div>
 
     <!--------------- Header ---------------------->
-    <div id="header">
+    <!-- <div id="header">
         <div id="title">
             <div id="icon">
                 <img class="fill-img" src="../img/icons/icon_new.svg">
@@ -124,7 +153,7 @@
                 <img  class="fill-img" src="../img/buttons/help.svg">
             </button>            
         </div>
-    </div>
+    </div> -->
 
     <!-- <div id="tools" class="rounded">        
         <div id="help" class="top-menu hidden">

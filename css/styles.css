@@ -69,9 +69,6 @@
     top: 0.75rem;
 }
 
-.sticky-top{
-    position: sticky;
-}
 
 /***************************************************************/
 /*              Dialog / Modals                                */
@@ -103,9 +100,10 @@ body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
     width: 100%;
     height: 100%;
     position: fixed;
-    z-index: 999;
+    z-index: 99999;
     background-color: rgba(0,0,0, 0.5);
-
+    top: 0;
+    left: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -174,14 +172,29 @@ body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
     background: var(--light-grey); 
 }
 
-/********************************************* Popup */
-/* New */
+/************* Header *******************/
 #header{
+    
     display: flex;
     padding: 0.5rem;
     justify-content: flex-end;
     gap: 0.25rem;
     min-height: 50px;
+    
+}
+#header:not(.sticky-top):has(.tool:hover){
+    z-index: 99999;
+    position: relative;
+}
+
+.sticky-top{
+    justify-content: flex-start !important;
+    position: sticky;
+    top: 0px;
+    filter: drop-shadow(2px 2px 3px #1a1a1a);
+}
+.sticky-top #title{
+    display: none;
 }
 
 #title{
@@ -189,7 +202,7 @@ body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
     display: flex;
     gap: 0.25rem;
     width: 20%;
-    align-items: center;    
+    align-items: center;
 }
     /* Title Children */
     #icon{        
@@ -206,12 +219,6 @@ body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
         left: 0;
     } 
 
-/* All Images in toolbar */
-/* #title img, #title-btns img{
-    width: 100%;
-    height: auto;
-} */
-
 .fill-img{
     width: 100%;
     height: auto;
@@ -223,7 +230,7 @@ body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
     justify-content: center; */
     gap: 0.2rem;
     padding: 0.1rem;
-    border: 1px solid #1c1c1c;
+    border: 2px solid #1c1c1c;
     background-color: var(--lighter-grey);
     border-radius: 0.45rem;
     position: sticky;
@@ -250,7 +257,10 @@ body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
 .tool{    
     text-align: center;
     position: relative;
-    z-index: initial;
+    /* z-index: initial; */
+}
+.tool:hover{
+    z-index: 9999;
 }
 .tool::after{ /* Normal */
     pointer-events: none;
@@ -268,7 +278,7 @@ body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
     font-size: 12px;
 }
 .tool:hover::after{ /* Hover */
-    z-index: 99999;
+    z-index: 9999;
     display: block;
     opacity: 0;
     animation: tool-hover 500ms ease-out 2s forwards;

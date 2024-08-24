@@ -84,7 +84,7 @@ chrome.runtime.onMessage.addListener(
 
       // popup setting new note values
       if ( request.type === 'set' && request.value === 'notes' ){        
-        console.log('NEW DATA:',request.data)
+        /* console.log('NEW DATA:',request.data) */
         notes_array = request.data
         chrome.storage.sync.set({notes: notes_array})
         setNewNotesBadge()
