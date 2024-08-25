@@ -78,10 +78,9 @@
     to{ opacity: 1; }
 }
 
-/* Help Modal */
+/* Help Modal disables normal scroll */
 body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
     height: 600px;
-    /* height: 100%;  */
     overflow-y: hidden;
 }
 #help-modal-header{
@@ -117,7 +116,7 @@ body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
     color: black;        
     background-color: white;
     padding: 1rem;
-    border-radius: 0.5rem;
+    /* border-radius: 0.5rem; */
     border: 2px solid black;
     filter: drop-shadow( 5px 5px 10px #1b1b1b );
 }
@@ -156,21 +155,29 @@ body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
         background-color: var(--red-color);
     }
 
-/******************************************** scrollbar */
-#noter-body::-webkit-scrollbar { 
-    width: 7px; 
+/******************************************** scrollbars */
+.scrolled{
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+    scrollbar-color: var(--light-grey) var(--neutral-grey);
 }
-#noter-body::-webkit-scrollbar-track {
-    background: black;
+/*
+.scrolled::-webkit-scrollbar { 
+    width: 5px; 
+}
+
+.scrolled::-webkit-scrollbar-track {
+    background: #212121;
     padding: 1px;
 }
-#noter-body::-webkit-scrollbar-thumb { 
-    background: var(--lighter-grey);
+.scrolled:-webkit-scrollbar-thumb { 
+    background: var(--light-grey);
     border: 1px solid black;
 }
-#noter-body::-webkit-scrollbar-thumb:hover { 
+.scrolled::-webkit-scrollbar-thumb:hover { 
     background: var(--light-grey); 
-}
+} */
 
 /************* Header *******************/
 #header{

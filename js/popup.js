@@ -2,7 +2,7 @@
 /* document.getElementById('full-btn').onclick = e =>
     chrome.tabs.create({url:'html/default_popup.html'}) */
 
-// Removed Tooltip
+// * Removed Tooltip
 /* show_tooltip_checkbox.onclick = e =>{
     chrome.storage.sync.set({show_tooltip: e.currentTarget.checked})
 } 
@@ -40,11 +40,17 @@ const no_notes = `<h3>No notes saved...</h3>`;
 const dom_parser = new DOMParser();
 
 ///////////////////////////////////////////////////////////////// Header / Lock Logic
-window.onscroll = ()=>{
-    if (window.scrollY){
-        if (locked) header_div.classList.add('sticky-top')
-    }else{
-        header_div.classList.remove('sticky-top')
+var tools_stuck = false;
+//const has_scrollbar = ()=> document.documentElement.scrollTop > document.documentElement.clientHeight;
+
+
+window.onscroll = ()=>{    
+    if ( window.scrollY > 1 ){
+        if ( locked ){
+            header_div.classList.add('sticky-top')            
+        } 
+    }else{        
+        if ( locked ) header_div.classList.remove('sticky-top')
     }
 }
 

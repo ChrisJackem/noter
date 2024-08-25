@@ -7,9 +7,9 @@
     <title>Noter</title>
     <link href="../css/styles.css" rel="stylesheet">
 </head>
-<body id="noter-body">
+<body id="noter-body" class="scrolled">
 
-    <div id="header" class="sticky-top">
+    <div id="header" class="">
         <div id="title">
             <div id="icon">
                 <img class="fill-img" src="../img/icons/icon_new.svg">
@@ -42,7 +42,7 @@
 
     <!-------------- Help Modal ---------------------->
     <div id="help-modal" class="modal hidden">        
-        <div id="help" class="modal-inner">
+        <div id="help" class="modal-inner scrolled">
 
             <div id="help-modal-header">
                 <h2>Noter Help</h2>
@@ -55,7 +55,7 @@
                 <div class="collapse-next">How to save a Note<img src="../img/buttons/plus.svg"></div>
                 <div class="hidden">
                     <div class="center-children">
-                        <img src="../img/context_menu.png" height="150px">  
+                        <img src="../img/help/context_menu.png" height="150px">  
                     </div>                                                      
                     <ol>                        
                         <li>Go to a website that you want to take a note of.</li>
@@ -71,7 +71,7 @@
                 <div class="collapse-next">How to Use Notes<img src="../img/buttons/plus.svg"></div>
                 <div class="hidden">                    
                     <p>If you have any notes, you will see them inside the main GUI. You can hover over any button to see more information.</p>
-                    <img class="img-full" src='../img/help_note.png'>
+                    <img class="img-full" src='../img/help/help_note.png'>
                     <ol type="A">
                         <li><strong>Note Title:</strong> The title of the note.</li>
                         <li><strong>Note Buttons:</strong> Use these to manipulate the note.
@@ -97,15 +97,16 @@
                 <div class="hidden">
                     <h4>Tools Menu</h4>
                     <div class="center-children">
-                        <img src="../img/help_note_tools.png" height="100px">
+                        <img src="../img/help/help_note_tools.png" height="100px">
                     </div>
                     <br/>
                     <p>These are actions you can perform on all the notes:</p><br/>
                     <ol type="A">
-                        <li><strong>Collapse All:</strong> Collapse all notes - same as clicking "Collapse" button on all notes.</li>
-                        <li><strong>Expand All:</strong> Expand all notes - same as clicking "Expand" button on all notes.</li>
-                        <li><strong>Delete All:</strong> Delete all your notes.</li>
+                        <li><strong>Lock/Unlock Tools:</strong> Lock or Unlock Tool menu to the screen - When locked, will stay visible while scrolling. (locked by default)</li>
                         <li><strong>Help:</strong> Click to see this menu.</li>
+                        <li><strong>Expand All:</strong> Expand all notes - same as clicking "Expand" button on all notes.</li>
+                        <li><strong>Collapse All:</strong> Collapse all notes - same as clicking "Collapse" button on all notes.</li>
+                        <li><strong>Delete All:</strong> Delete all your notes.</li>
                     </ol>
                 </div>
             </div>
