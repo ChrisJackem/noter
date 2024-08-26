@@ -220,7 +220,7 @@ body:has(#help-modal:not(.hidden)), html:has(#help-modal:not(.hidden)){
     }
     #title-text::after{
         font-size: 8px;
-        content: 'v1.0';
+        content: 'v1.2';
         position: absolute;
         top: 90%;
         left: 0;
