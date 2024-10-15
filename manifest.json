@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Noter",
     "description": "Save notes for web pages",
-    "version": "1.0",
+    "version": "1.4.0",
     "permissions": ["activeTab", "storage", "contextMenus", "unlimitedStorage"],
     "action": {
       "default_popup": "./html/default_popup.html",
