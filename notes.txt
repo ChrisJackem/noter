@@ -1,6 +1,5 @@
 <span class="modal-text">Name</span>
 
-
 class="tool"
 text=""
 
@@ -14,3 +13,6 @@ https://www.youtube.com/watch?v=7NpmneoyLUA
 version text - change on upload !!
 styles.css:223
 manifest.json:5
+
+chrome store link
+https://chromewebstore.google.com/detail/noter/febdhbfmobmdhhffbepbajikpnjokhmc
