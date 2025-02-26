@@ -193,7 +193,7 @@ const addNote = ( index, name, url, text, collapsed )=>{
         `<div class='note' data-index=${index}>
             <div class='note-head'>
                 <h3 class='flex-left'>${name}</h3>
-                <input type='text' class='hidden' value='${name}' tabindex=1 maxlength="50">                
+                <input type='text' class='note-input hidden' value='${name}' tabindex=1 maxlength="50">                
                 <button class='btn-edit tool' text="Edit Note">
                     <img src='${img_rename}'>
                 </button>                
