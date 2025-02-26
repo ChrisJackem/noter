@@ -1,17 +1,4 @@
-// TODO :: Full Screen almost works, need many css hacks right now
-/* document.getElementById('full-btn').onclick = e =>
-    chrome.tabs.create({url:'html/default_popup.html'}) */
-
-// * Removed Tooltip
-/* show_tooltip_checkbox.onclick = e =>{
-    chrome.storage.sync.set({show_tooltip: e.currentTarget.checked})
-} 
-chrome.storage.sync.get('show_tooltip', response => {
-    if (!response.hasOwnProperty('show_tooltip')) response.show_tooltip = true
-    show_tooltip_checkbox.checked = response.show_tooltip
-})*/
-
-// Disable context menu on this page
+// Disable context menu on popup
 window.addEventListener('contextmenu', e => e.preventDefault() )
 
 // Store DOM
@@ -41,8 +28,6 @@ const dom_parser = new DOMParser();
 
 ///////////////////////////////////////////////////////////////// Header / Lock Logic
 var tools_stuck = false;
-//const has_scrollbar = ()=> document.documentElement.scrollTop > document.documentElement.clientHeight;
-
 
 window.onscroll = ()=>{    
     if ( window.scrollY > 1 ){
@@ -183,9 +168,6 @@ document.getElementById('help-init').onclick = ()=>{
 document.getElementById('help-dismiss').onclick = ()=>{
     help_modal.classList.add('hidden');
 };
-
-
-
 
 //////////////////////////////////////////////////////////////// Notes
 const addNote = ( index, name, url, text, collapsed )=>{

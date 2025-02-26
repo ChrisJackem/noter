@@ -7,6 +7,5 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     }
 });
 
-// Chrome makes workers inactive
-// This breaks the context menu so we have to do this...
+// Chrome makes workers inactive sometimes - This breaks the context menu
 chrome.runtime.sendMessage({ type:"ping"});
