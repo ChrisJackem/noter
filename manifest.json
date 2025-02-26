@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Noter",
     "description": "Save notes for web pages",
-    "version": "1.4.2",
+    "version": "1.4.4",
     "permissions": ["activeTab", "storage", "contextMenus", "unlimitedStorage"],
     "action": {
       "default_popup": "./html/default_popup.html",
@@ -26,8 +26,7 @@
     },
     "web_accessible_resources": [{
         "resources": ["img/*"],
-        "matches": ["<all_urls>"]
-            
+        "matches": ["<all_urls>"]            
     }]      
   }
   
