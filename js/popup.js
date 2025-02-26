@@ -32,10 +32,10 @@ var tools_stuck = false;
 window.onscroll = ()=>{    
     if ( window.scrollY > 1 ){
         if ( locked ){
-            header_div.classList.add('sticky-top')            
+            header_div.classList.add('sticky-top');            
         } 
     }else{        
-        if ( locked ) header_div.classList.remove('sticky-top')
+        if ( locked ) header_div.classList.remove('sticky-top');
     }
 }
 
@@ -60,7 +60,7 @@ const escapeHTML = str =>{
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;")
+      .replace(/'/g, "&#39;");
 }
 
 // Output
@@ -84,11 +84,11 @@ const writeToOutput = str => {
 // Collapseable items in the tool menu
 for ( const coll_next of [...document.getElementsByClassName('collapse-next')] ){
     coll_next.onclick = e =>{
-        let next_sibling = coll_next.nextElementSibling
-        let my_img = coll_next.getElementsByTagName('img')[0]
-        next_sibling.classList.toggle('hidden')
-        let next_hidden = [...next_sibling.classList].includes('hidden')
-        my_img.src = next_hidden ? img_plus : img_minus
+        let next_sibling = coll_next.nextElementSibling;
+        let my_img = coll_next.getElementsByTagName('img')[0];
+        next_sibling.classList.toggle('hidden');
+        let next_hidden = [...next_sibling.classList].includes('hidden');
+        my_img.src = next_hidden ? img_plus : img_minus;
     }
 }
 
@@ -98,9 +98,9 @@ for ( const coll_next of [...document.getElementsByClassName('collapse-next')] )
 const collapse_all = collapse =>{
     let count = 0;
     for ( const note of getAllNotes() ){
-        const collapse_div = note.getElementsByClassName('note-collapse')[0]
-        const collapse_btn = note.getElementsByClassName('btn-collapse')[0]
-        const is_collapsed = collapse_div.classList.contains('collapsed')        
+        const collapse_div = note.getElementsByClassName('note-collapse')[0];
+        const collapse_btn = note.getElementsByClassName('btn-collapse')[0];
+        const is_collapsed = collapse_div.classList.contains('collapsed');    
         if ( collapse ){
             if ( !is_collapsed ){
                 count++;
@@ -114,7 +114,7 @@ const collapse_all = collapse =>{
         }    
     }
     writeToOutput(`${collapse?'Collapsed':'Expanded'} ${count ? count : 'no'} note${(count>1 || count==0) ? 's' : ''}.`);
-    chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
+    chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array });
 }
 
 document.getElementById('collapse-all').onclick = e => collapse_all( true );
@@ -131,7 +131,7 @@ document.getElementById('delete-all').onclick = e => {
         let count = 0;
         getAllNotes().forEach( n => {
             count++;
-            n.remove()
+            n.remove();
         } );
         content.innerHTML = no_notes;
         writeToOutput(`Deleted ${count?count:'no'} note${count>1 || !count ? 's' : ''}.`);
@@ -201,62 +201,62 @@ const addNote = ( index, name, url, text, collapsed )=>{
     , 'text/html').body.firstChild )
     
     // Actions
-    const note_title_h = new_note.getElementsByTagName('h3')[0]
-    const note_title_input = new_note.getElementsByTagName('input')[0]
-    const btn_collapse = new_note.getElementsByClassName('btn-collapse')[0]
-    const btn_dismiss = new_note.getElementsByClassName('btn-dismiss')[0]
-    const btn_edit = new_note.getElementsByClassName('btn-edit')[0]
-    const btn_copy = new_note.getElementsByClassName('btn-copy')[0]
-    const note_anchor = new_note.getElementsByClassName('note-link')[0]
-    const textarea = new_note.getElementsByTagName('textarea')[0]
-    const note_text_div = new_note.getElementsByTagName('pre')[0]
+    const note_title_h = new_note.getElementsByTagName('h3')[0];
+    const note_title_input = new_note.getElementsByTagName('input')[0];
+    const btn_collapse = new_note.getElementsByClassName('btn-collapse')[0];
+    const btn_dismiss = new_note.getElementsByClassName('btn-dismiss')[0];
+    const btn_edit = new_note.getElementsByClassName('btn-edit')[0];
+    const btn_copy = new_note.getElementsByClassName('btn-copy')[0];
+    const note_anchor = new_note.getElementsByClassName('note-link')[0];
+    const textarea = new_note.getElementsByTagName('textarea')[0];
+    const note_text_div = new_note.getElementsByTagName('pre')[0];
 
     note_anchor.onclick = 
-        e => chrome.tabs.create({ active:true, url:note_anchor.href })
+        e => chrome.tabs.create({ active:true, url:note_anchor.href });
 
     btn_edit.onclick = e =>{
         // 'hidden' class decides the state of the edit button
-        const header_showing = [...note_title_h.classList].includes('hidden')
-        note_title_input.classList.toggle('hidden')
-        note_title_h.classList.toggle('hidden')
-        note_text_div.setAttribute('contenteditable', !header_showing)
-        note_text_div.classList.toggle('editable')
+        const header_showing = [...note_title_h.classList].includes('hidden');
+        note_title_input.classList.toggle('hidden');
+        note_title_h.classList.toggle('hidden');
+        note_text_div.setAttribute('contenteditable', !header_showing);
+        note_text_div.classList.toggle('editable');
         
         if (!header_showing){
             // Edit
-            note_title_input.select()
-            btn_edit.innerHTML = `<img src='${img_save}'>`            
+            note_title_input.select();
+            btn_edit.innerHTML = `<img src='${img_save}'>`;          
         }else{
             // Save 
-            btn_edit.innerHTML = `<img src='${img_rename}'>`
-            note_title_h.innerHTML = note_title_input.value
-            let escaped = escapeHTML(note_text_div.innerText)          
-            setNoteData( index, 'name', note_title_input.value )
-            setNoteData( index, 'text',  escaped )
+            btn_edit.innerHTML = `<img src='${img_rename}'>`;
+            note_title_h.innerHTML = note_title_input.value;
+            let escaped = escapeHTML(note_text_div.innerText);        
+            setNoteData( index, 'name', note_title_input.value );
+            setNoteData( index, 'text',  escaped );
             writeToOutput('Note changed.');
         }
         // Tooltip
-        btn_edit.setAttribute('text', header_showing ? "Edit Note" : "Save Note")
+        btn_edit.setAttribute('text', header_showing ? "Edit Note" : "Save Note");
     } 
   
     
     btn_collapse.onclick = (e, save=true) =>{
-        const collapse_div = new_note.getElementsByClassName('note-collapse')[0]        
-        const is_collapsed = [...collapse_div.classList].includes('collapsed')
-        btn_collapse.innerHTML = `<img src='${ is_collapsed ? img_minus : img_plus}'>`    
-        collapse_div.classList.toggle('collapsed')
+        const collapse_div = new_note.getElementsByClassName('note-collapse')[0];      
+        const is_collapsed = [...collapse_div.classList].includes('collapsed');
+        btn_collapse.innerHTML = `<img src='${ is_collapsed ? img_minus : img_plus}'>`;   
+        collapse_div.classList.toggle('collapsed');
         // pass save to setNoteData
-        setNoteData(index, 'collapsed', !is_collapsed, save)
-        btn_collapse.setAttribute('text', is_collapsed ? 'Collapse Note' : 'Expand Note')
+        setNoteData(index, 'collapsed', !is_collapsed, save);
+        btn_collapse.setAttribute('text', is_collapsed ? 'Collapse Note' : 'Expand Note');
     }
 
     btn_dismiss.onclick = e =>{
         // Modal
         showModal( delete_modal, `${name}`, ()=>{
-            let check_index = note_array.map( obj => obj.text ).indexOf(text)
-            note_array.splice( check_index, 1 )
-            chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
-            new_note.remove()
+            let check_index = note_array.map( obj => obj.text ).indexOf(text);
+            note_array.splice( check_index, 1 );
+            chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array });
+            new_note.remove();
             if (!note_array.length) content.innerHTML = no_notes;
             writeToOutput(`Deleted note.`);
         });        
@@ -270,10 +270,10 @@ const addNote = ( index, name, url, text, collapsed )=>{
 
 // * Set save to false for batch operations (save later)
 const setNoteData = (index, prop, new_val, save=true) =>{
-    const obj = note_array[parseInt(index)]
-    obj[prop] = new_val
+    const obj = note_array[parseInt(index)];
+    obj[prop] = new_val;
     if (save){
-        chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array })
+        chrome.runtime.sendMessage({ type: "set", value:"notes", data: note_array });
     }
 }
 
@@ -289,12 +289,12 @@ const getNoteData = (()=> {
     }
           
     chrome.storage.sync.get('notes', note_data => {
-        note_array = note_data.notes || []
-        content.innerHTML = note_array.length ? '' : no_notes
+        note_array = note_data.notes || [];
+        content.innerHTML = note_array.length ? '' : no_notes;
         
         note_array.forEach( (note, i)=>{
-            const { name, text, url, collapsed } = note
-            addNote( i, name, url, text, collapsed )
+            const { name, text, url, collapsed } = note;
+            addNote( i, name, url, text, collapsed );
         })
         window.scrollTo(0, document.body.scrollHeight);
     })
